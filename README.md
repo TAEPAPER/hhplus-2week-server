@@ -46,6 +46,60 @@
 
 ---
 
+## 도메인 모델링
+![e-commerce-domain-modeling](./docs/diagrams/domainModeling/e-commerce-domain-modeling.png)
+↪︎ [drawio 파일](./docs/diagrams/domainModeling/e-commerce-domain-modeling.drawio)
+
+### 도메인 모델링 요약 
+
+### 1. **Product (상품)**
+- 시스템의 판매 대상
+- 하나의 `Product`는 최소 0 부터 여러 `Inventory`(재고)를 가진다
+- 주문 시 참조된다
+
+---
+
+### 2. **Inventory (재고)**
+- 상품별 수량 상태를 나타낸다
+- 하나의 `Product`에 연결된다
+- 주문 시 재고 감소한다
+
+---
+
+### 3. **Order (주문)**
+- 사용자가 구매 요청한 정보
+- 여러 상품과 연결됨 (OrderItem 개념은 생략)
+- 하나의 `Order`는 하나의 `Payment`로 이어진다
+
+---
+
+### 4. **Payment (결제)**
+- 주문 금액 지불
+- 포인트와 쿠폰 사용을 포함할 수 있다
+- 결제가 완료되면 주문 상태 전이 발생한다
+
+---
+
+### 5. **Point (포인트)**
+- 사용자별 충전 잔액
+- 결제 시 차감된다
+- `Payment`에 의해 영향을 받는다
+
+---
+
+### 6. **Coupon (쿠폰)**
+- 할인 정책을 정의
+- 사용자는 `IssuedCoupon`을 가지고 있다
+- 결제 시 적용될 수 있다
+
+---
+
+### 7. **Analytics (통계)**
+- `Order` 를 기반으로 상품별 통계를 집계
+- 최근 3일간 인기 상품 집계 기능 제공한다
+
+---
+
 ## 시퀀스 다이어그램
 
 ### 포인트
