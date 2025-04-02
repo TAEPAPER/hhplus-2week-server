@@ -167,5 +167,11 @@
 ---
 
 ## ERD
-[!e-commerce-erd](./docs/diagrams/erd/e-commerce-erd-cart.png)
+![e-commerce-erd](./docs/diagrams/erd/e-commerce-erd-cart.png)
 ↪︎ [dbdiagram 소스](./docs/diagrams/erd/e-commerce-erd-cart.txt)
+
+---
+
+## 클래스 다이어그램
+![e-commerce-class-diagram](./docs/diagrams/classDiagram/e-commerce-class-diagram.png)
+↪︎ [plantUML 소스](./docs/diagrams/classDiagram/e-commerce-class-diagram.txt) 

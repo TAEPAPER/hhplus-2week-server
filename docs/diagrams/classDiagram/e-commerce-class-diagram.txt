@@ -1,0 +1,151 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam linetype ortho
+left to right direction
+
+' 핵심 도메인 클래스
+
+class Product {
+  - id: ProductId
+  - name: String
+  - price: Money
+  - description: String
+}
+
+class ProductOption {
+  - id: Long
+  - productId: ProductId
+  - name: String
+  - extraPrice: Money
+}
+
+class Inventory {
+  - productId: ProductId
+  - productOptionId: Long [nullable]
+  - stock: int
+  + isAvailable(quantity: int): boolean
+  + decrease(quantity: int)
+  + increase(quantity: int)
+}
+
+class Cart {
+  - userId: UserId
+  - items: List<CartItem>
+}
+
+class CartItem {
+  - productId: ProductId
+  - productOptionId: Long [nullable]
+  - quantity: int
+}
+
+class Order {
+  - id: OrderId
+  - userId: UserId
+  - orderItems: List<OrderItem>
+  - status: OrderStatus
+  + calculateTotal(): Money
+  + complete()
+}
+
+class OrderItem {
+  - productId: ProductId
+  - productOptionId: Long [nullable]
+  - quantity: int
+  - unitPrice: Money
+}
+
+enum OrderStatus {
+  CREATED
+  PAID
+  CANCELLED
+}
+
+class Payment {
+  - id: PaymentId
+  - orderId: OrderId
+  - amount: Money
+  - usedPoint: Money
+  - usedCouponId: CouponId
+  - status: PaymentStatus
+  + complete()
+  + fail()
+}
+
+enum PaymentStatus {
+  INITIATED
+  SUCCESS
+  FAILED
+}
+
+class Coupon {
+  - id: CouponId
+  - discountAmount: Money
+  - expiredAt: DateTime
+  + isValid(): boolean
+  + apply(total: Money): Money
+}
+
+class IssuedCoupon {
+  - id: Long
+  - couponId: CouponId
+  - userId: UserId
+  - isUsed: boolean
+  + markUsed()
+}
+
+class PointWallet {
+  - userId: UserId
+  - balance: Money
+  + charge(amount: Money)
+  + use(amount: Money)
+  + canAfford(amount: Money): boolean
+}
+
+class PointHistory {
+  - id: Long
+  - userId: UserId
+  - type: PointType
+  - amount: Money
+  - paymentId: PaymentId [nullable]
+  - createdAt: DateTime
+}
+
+enum PointType {
+  CHARGE
+  USE
+  REFUND
+  EXPIRE
+}
+
+class TopSellingProduct {
+  - productId: ProductId
+  - totalSold: int
+  - productName: String
+}
+
+class SalesStatistic {
+  - date: Date
+  - productId: ProductId
+  - soldCount: int
+}
+
+' 관계 정의
+
+ProductOption --> Product
+Inventory --> Product
+Inventory --> ProductOption
+Cart --> CartItem
+CartItem --> Product
+CartItem --> ProductOption
+Order --> OrderItem
+OrderItem --> Product
+OrderItem --> ProductOption
+Payment --> Order
+Payment --> IssuedCoupon
+IssuedCoupon --> Coupon
+PointWallet --> PointHistory
+PointHistory --> Payment
+TopSellingProduct --> Product
+SalesStatistic --> Product
+@enduml
