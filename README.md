@@ -163,3 +163,9 @@
 - **최근 3일 상위 5개 상품 조회**  
   ![top5-statistics](./docs/diagrams/sequenceDiagram/top5-statistics.png)  
   ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/top5-statistics.txt)
+
+---
+
+## ERD
+[!e-commerce-erd](./docs/diagrams/erd/e-commerce-erd.png)
+↪︎ [dbdiagram 소스](./docs/diagrams/erd/e-commerce-erd.txt)
