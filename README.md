@@ -167,5 +167,5 @@
 ---
 
 ## ERD
-[!e-commerce-erd](./docs/diagrams/erd/e-commerce-erd.png)
-↪︎ [dbdiagram 소스](./docs/diagrams/erd/e-commerce-erd.txt)
+[!e-commerce-erd](./docs/diagrams/erd/e-commerce-erd-cart.png)
+↪︎ [dbdiagram 소스](./docs/diagrams/erd/e-commerce-erd-cart.txt)
