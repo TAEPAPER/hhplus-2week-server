@@ -1,0 +1,9 @@
+@startuml
+title 상품 목록 조회
+actor User
+User -> 상품 : 상품 목록 요청
+상품 -> DB : 상품 목록 조회
+DB --> 상품 : 상품 리스트
+상품 --> User : 상품 목록 반환
+
+@enduml

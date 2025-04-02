@@ -46,3 +46,66 @@
 
 ---
 
+## 시퀀스 다이어그램
+
+### 포인트
+
+- **포인트 충전**  
+  ![point-charge](./docs/diagrams/sequenceDiagram/point-charge.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/point-charge.txt)
+
+- **포인트 사용**  
+  ![point-use](./docs/diagrams/sequenceDiagram/point-use.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/point-use.txt)
+
+- **포인트 잔액 조회**  
+  ![point-balance](./docs/diagrams/sequenceDiagram/point-balance.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/point-balance.txt)
+
+---
+
+### 상품
+
+- **상품 목록 조회**  
+  ![product-list](./docs/diagrams/sequenceDiagram/product-list.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/product-list.txt)
+
+- **상품 상세 조회**  
+  ![product-detail-inventory](./docs/diagrams/sequenceDiagram/product-detail-inventory.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/product-detail-inventory.txt)
+
+---
+
+### 주문
+
+- **주문 생성**  
+  ![order-only](./docs/diagrams/sequenceDiagram/order-only.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/order-only.txt)
+
+---
+
+### 결제
+
+- **결제**  
+  ![payment_v0.2](./docs/diagrams/sequenceDiagram/payment_v.0.2.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/payment_v.0.2.txt)
+
+---
+
+### 쿠폰
+
+- **쿠폰 선착순 발급**  
+  ![coupon-first-come-first-served](./docs/diagrams/sequenceDiagram/coupon-first-come-first-served.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/coupon-first-come-first-served.txt)
+
+- **보유 쿠폰 조회**  
+  ![coupon-user-have-list](./docs/diagrams/sequenceDiagram/coupon-user-have-list.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/coupon-user-have-list.txt)
+
+---
+
+### 통계
+
+- **최근 3일 상위 5개 상품 조회**  
+  ![top5-statistics](./docs/diagrams/sequenceDiagram/top5-statistics.png)  
+  ↪︎ [PlantUML 소스](./docs/diagrams/sequenceDiagram/top5-statistics.txt)
