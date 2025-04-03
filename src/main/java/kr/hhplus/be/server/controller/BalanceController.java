@@ -27,7 +27,7 @@ public class BalanceController {
 
     @Operation(summary = "잔액 조회")
     @GetMapping("/{userId}")
-    public ResponseEntity<BalanceResponse> get(@PathVariable Long userId) {
+    public ResponseEntity<BalanceResponse> get(@PathVariable("userId") Long userId) {
         BigDecimal balance = wallet.getOrDefault(userId, BigDecimal.ZERO);
         return ResponseEntity.ok(new BalanceResponse(userId, balance));
     }
