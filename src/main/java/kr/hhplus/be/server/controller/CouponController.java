@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.dto.response.IssuedCouponResponse;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,9 @@ public class CouponController {
 
     @Operation(summary = "선착순 쿠폰 발급")
     @PostMapping("/issue/{userId}")
-    public ResponseEntity<String> issue(@PathVariable Long userId) {
+    public ResponseEntity<String> issue(
+            @Parameter(description = "쿠폰을 발급받을 사용자 ID")
+            @PathVariable("userId") Long userId) {
         List<IssuedCouponResponse> all = userCoupons.values().stream().flatMap(List::stream).toList();
         if (all.size() >= maxCoupons) return ResponseEntity.status(429).body("쿠폰 소진");
 
