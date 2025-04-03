@@ -207,3 +207,11 @@
 ]
 ```
 
+## Swagger 
+- ![포인트 충전](./diagrams/swagger/balance-charge.png)
+- ![포인트 조회](./diagrams/swagger/balance-get.png)
+- ![쿠폰 목록 조회](./diagrams/swagger/get-coupon-list.png)
+- ![쿠폰 선착순 발행](./diagrams/swagger/issue-coupon.png)
+- ![주문/결제](./diagrams/swagger/orders.png)
+- ![전체 상품 조회](./diagrams/swagger/products.png)
+- ![인기 상품 조회](./diagrams/swagger/top-products.png)
