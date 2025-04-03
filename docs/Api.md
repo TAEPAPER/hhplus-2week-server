@@ -39,6 +39,13 @@
 
 - `200 OK`
 
+### ⚠️ 에러
+| 상태 코드 | 에러 코드 | 설명 |
+|------------|------------|------|
+| 400 | INVALID_REQUEST | 잘못된 요청 형식 또는 음수 금액 |
+| 404 | USER_NOT_FOUND | 존재하지 않는 사용자 |
+
+
 ---
 
 ## 2️⃣ 잔액 조회 API
@@ -63,6 +70,11 @@
   "balance": 12000
 }
 ```
+### ⚠️ 에러
+| 상태 코드 | 에러 코드 | 설명 |
+|------------|------------|------|
+| 400 | INVALID_REQUEST | 잘못된 요청 형식 또는 음수 금액 |
+| 404 | USER_NOT_FOUND | 존재하지 않는 사용자 |
 
 ---
 
@@ -134,6 +146,14 @@
   "finalAmount": 27000
 }
 ```
+### ⚠️ 에러
+| 상태 코드 | 에러 코드 | 설명 |
+|------------|------------|------|
+| 400 | INVALID_REQUEST | 필드 누락/잘못된 형식 |
+| 404 | PRODUCT_NOT_FOUND | 존재하지 않는 상품 ID |
+| 409 | PRODUCT_OUT_OF_STOCK | 상품 재고 부족 |
+| 422 | INSUFFICIENT_BALANCE | 포인트 잔액 부족 |
+| 422 | COUPON_INVALID | 쿠폰이 유효하지 않음 or 이미 사용됨 |
 
 ---
 
@@ -155,6 +175,12 @@
 
 - `200 OK`: 쿠폰 발급 완료  
 - `429 Too Many Requests`: 쿠폰 소진
+
+### ⚠️ 에러
+| 상태 코드 | 에러 코드 | 설명 |
+|------------|------------|------|
+| 429 | COUPON_EXHAUSTED | 쿠폰 수량 초과로 발급 실패 |
+| 404 | USER_NOT_FOUND | 사용자 없음 |
 
 ---
 
@@ -179,6 +205,11 @@
   }
 ]
 ```
+
+### ⚠️ 에러
+| 상태 코드 | 에러 코드 | 설명 |
+|------------|------------|------|
+| 404 | USER_NOT_FOUND | 존재하지 않는 사용자 |
 
 ---
 
@@ -208,10 +239,10 @@
 ```
 
 ## Swagger 
-- ![포인트 충전](./diagrams/swagger/balance-charge.png)
-- ![포인트 조회](./diagrams/swagger/balance-get.png)
-- ![쿠폰 목록 조회](./diagrams/swagger/get-coupon-list.png)
-- ![쿠폰 선착순 발행](./diagrams/swagger/issue-coupon.png)
-- ![주문/결제](./diagrams/swagger/orders.png)
-- ![전체 상품 조회](./diagrams/swagger/products.png)
-- ![인기 상품 조회](./diagrams/swagger/top-products.png)
+- 포인트 충전 ![포인트 충전](./diagrams/swagger/balance-charge.png)
+- 포인트 조회 ![포인트 조회](./diagrams/swagger/balance-get.png)
+- 쿠폰 목록 조회 ![쿠폰 목록 조회](./diagrams/swagger/get-coupon-list.png)
+- 쿠폰 선착순 발행 ![쿠폰 선착순 발행](./diagrams/swagger/issue-coupon.png)
+- 주문/결제 ![주문/결제](./diagrams/swagger/orders.png)
+- 전체 상품 조회 ![전체 상품 조회](./diagrams/swagger/products.png)
+- 인기 상품 조회 ![인기 상품 조회](./diagrams/swagger/top-products.png)
