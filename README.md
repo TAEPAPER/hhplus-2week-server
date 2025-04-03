@@ -112,7 +112,10 @@
 | **Analytics**<br>(통계) | 인기 상품 통계를 제공 | - 주문 기반 인기 상품 집계<br>- Top 5 결과 저장<br>- API 제공용 테이블 유지 |
 
 ---
+## 이벤트 스토밍
+![event-storming](./docs/diagrams/event_storming/event_storming.png)
 
+---
 ## 시퀀스 다이어그램
 
 ### 포인트
