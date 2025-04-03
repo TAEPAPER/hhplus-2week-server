@@ -11,5 +11,12 @@ public class BalanceResponse {
         this.userId  = userId;
         this.balance = balance;
     }
-    // constructor
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
 }
