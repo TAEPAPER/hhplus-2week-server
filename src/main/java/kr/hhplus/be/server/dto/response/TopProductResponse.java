@@ -12,5 +12,16 @@ public class TopProductResponse {
         this.totalSold = totalSold;
     }
 
+    public Long getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public int getTotalSold() {
+        return totalSold;
+    }
 
 }
