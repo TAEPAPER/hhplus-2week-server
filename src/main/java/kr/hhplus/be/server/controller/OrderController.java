@@ -31,7 +31,8 @@ public class OrderController {
             .map(item -> new BigDecimal("10000").multiply(BigDecimal.valueOf(item.getQuantity())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal balance = wallet.getOrDefault(request.getUserId(), BigDecimal.ZERO);
+        //BigDecimal balance = wallet.getOrDefault(request.getUserId(), BigDecimal.ZERO);
+        BigDecimal balance = new BigDecimal("50000");
         if (balance.compareTo(total) < 0) {
             return ResponseEntity.badRequest().build(); // 잔액 부족
         }

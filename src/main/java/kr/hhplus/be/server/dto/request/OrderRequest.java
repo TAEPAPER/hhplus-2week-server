@@ -21,6 +21,15 @@ public class OrderRequest {
         private Long productOptionId;
         private int quantity;
 
+
+        public Long getProductId() {
+            return productId;
+        }
+
+        public Long getProductOptionId() {
+            return productOptionId;
+        }
+
         public long getQuantity() {
             return quantity;
         }

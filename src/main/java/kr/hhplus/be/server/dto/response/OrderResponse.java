@@ -12,4 +12,16 @@ public class OrderResponse {
         this.paymentId = paymentId;
         this.finalAmount = finalAmount;
     }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public Long getPaymentId() {
+        return paymentId;
+    }
+
+    public BigDecimal getFinalAmount() {
+        return finalAmount;
+    }
 }
