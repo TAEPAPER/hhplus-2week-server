@@ -40,7 +40,7 @@ public class CouponController {
 
     @Operation(summary = "내 쿠폰 목록 조회")
     @GetMapping("/{userId}")
-    public ResponseEntity<List<IssuedCouponResponse>> myCoupons(@PathVariable Long userId) {
-        return ResponseEntity.ok(userCoupons.getOrDefault(userId, List.of()));
+    public ResponseEntity<List<IssuedCouponResponse>> myCoupons(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(userCoupons.getOrDefault(userId, List.of(new IssuedCouponResponse(1l,1L,new BigDecimal("1000"),false,LocalDateTime.now()))));
     }
 }

@@ -18,4 +18,23 @@ public class IssuedCouponResponse {
         this.expiredAt = expiredAt;
     }
 
+    public Long getIssuedCouponId() {
+        return issuedCouponId;
+    }
+
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    public LocalDateTime getExpiredAt() {
+        return expiredAt;
+    }
 }
