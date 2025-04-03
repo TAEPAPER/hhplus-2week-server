@@ -18,5 +18,23 @@ public class ProductResponse {
         this.description = description;
     }
 
+    public Long getProductId() {
+        return productId;
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }
