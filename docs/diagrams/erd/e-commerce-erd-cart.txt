@@ -1,0 +1,146 @@
+Table User {
+  id BIGINT [pk]
+  email VARCHAR(100) [unique]
+  name VARCHAR(50)
+  password_hash TEXT
+  created_at DATETIME
+}
+
+Table Product {
+  id BIGINT [pk]
+  name VARCHAR(100)
+  price DECIMAL(10,2)
+  description TEXT
+  created_at DATETIME
+}
+
+Table ProductOption {
+  id BIGINT [pk]
+  product_id BIGINT
+  name VARCHAR(50)
+  extra_price DECIMAL(10,2)
+
+  Indexes {
+    (product_id)
+  }
+}
+
+Ref: ProductOption.product_id > Product.id
+
+Table Inventory {
+  id BIGINT [pk]
+  product_id BIGINT
+  product_option_id BIGINT [null]
+  stock INT
+  updated_at DATETIME
+
+  Indexes {
+    (product_id, product_option_id)
+  }
+}
+
+Ref: Inventory.product_id > Product.id
+Ref: Inventory.product_option_id > ProductOption.id
+
+Table Cart {
+  id BIGINT [pk]
+  user_id BIGINT
+  created_at DATETIME
+}
+
+Ref: Cart.user_id > User.id
+
+Table CartItem {
+  id BIGINT [pk]
+  cart_id BIGINT
+  product_id BIGINT
+  product_option_id BIGINT [null]
+  quantity INT
+  added_at DATETIME
+}
+
+Ref: CartItem.cart_id > Cart.id
+Ref: CartItem.product_id > Product.id
+Ref: CartItem.product_option_id > ProductOption.id
+
+Table "Order" {
+  id BIGINT [pk]
+  user_id BIGINT
+  status VARCHAR(20)
+  total_price DECIMAL(10,2)
+  created_at DATETIME
+}
+
+Ref: "Order".user_id > User.id
+
+Table OrderItem {
+  id BIGINT [pk]
+  order_id BIGINT
+  product_id BIGINT
+  product_option_id BIGINT [null]
+  quantity INT
+  unit_price DECIMAL(10,2)
+}
+
+Ref: OrderItem.order_id > "Order".id
+Ref: OrderItem.product_id > Product.id
+Ref: OrderItem.product_option_id > ProductOption.id
+
+Table Payment {
+  id BIGINT [pk]
+  order_id BIGINT
+  amount DECIMAL(10,2)
+  used_point DECIMAL(10,2)
+  used_coupon_id BIGINT [null]
+  status VARCHAR(20)
+  paid_at DATETIME
+}
+
+Ref: Payment.order_id > "Order".id
+Ref: Payment.used_coupon_id > IssuedCoupon.id
+
+Table Coupon {
+  id BIGINT [pk]
+  name VARCHAR(100)
+  discount_amount DECIMAL(10,2)
+  expired_at DATETIME
+}
+
+Table IssuedCoupon {
+  id BIGINT [pk]
+  coupon_id BIGINT
+  user_id BIGINT
+  is_used BOOLEAN
+  issued_at DATETIME
+}
+
+Ref: IssuedCoupon.coupon_id > Coupon.id
+Ref: IssuedCoupon.user_id > User.id
+
+Table PointWallet {
+  user_id BIGINT [pk]
+  balance DECIMAL(10,2)
+  updated_at DATETIME
+}
+
+Table PointHistory {
+  id BIGINT [pk]
+  user_id BIGINT
+  type VARCHAR(10)
+  amount DECIMAL(10,2)
+  payment_id BIGINT [null]
+  created_at DATETIME
+}
+
+Ref: PointHistory.user_id > PointWallet.user_id
+Ref: PointHistory.payment_id > Payment.id
+
+Table TopSellingProduct {
+  id BIGINT [pk]
+  product_id BIGINT
+  total_sold INT
+  aggregated_at DATETIME
+}
+
+Ref: TopSellingProduct.product_id > Product.id
+

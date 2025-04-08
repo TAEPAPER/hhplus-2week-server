@@ -1,0 +1,9 @@
+@startuml
+title 포인트 잔액 조회
+actor User
+User -> 포인트 : 포인트 잔액 조회 요청
+포인트 -> DB : 포인트 잔액 정보 조회
+DB --> 포인트 : 포인트 잔액 정보 반환
+포인트 --> User : 현재 잔액 포인트 응답
+
+@enduml

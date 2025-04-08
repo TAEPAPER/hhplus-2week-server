@@ -1,0 +1,22 @@
+@startuml
+actor User
+participant 포인트
+
+title 포인트 충전
+
+User -> 포인트 : 포인트 충전 요청
+포인트 -> DB : 포인트 적립
+DB --> 포인트 : 적립 결과 반환
+포인트 --> User : 충전 완료 응답
+
+@enduml
+
+
+
+
+
+
+
+
+
+
