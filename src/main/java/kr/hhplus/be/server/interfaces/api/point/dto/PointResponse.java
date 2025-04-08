@@ -1,13 +1,13 @@
-package kr.hhplus.be.server.dto.response;
+package kr.hhplus.be.server.interfaces.api.point.dto;
 
 import java.math.BigDecimal;
 
 // BalanceResponse
-public class BalanceResponse {
+public class PointResponse {
     private Long userId;
     private BigDecimal balance;
 
-    public BalanceResponse(Long userId, BigDecimal balance) {
+    public PointResponse(Long userId, BigDecimal balance) {
         this.userId  = userId;
         this.balance = balance;
     }

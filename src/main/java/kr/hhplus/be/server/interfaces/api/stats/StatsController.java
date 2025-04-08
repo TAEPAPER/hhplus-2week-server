@@ -1,10 +1,10 @@
-package kr.hhplus.be.server.controller;
+package kr.hhplus.be.server.interfaces.api.stats;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.dto.response.TopProductResponse;
+import kr.hhplus.be.server.interfaces.api.stats.dto.TopProductResponse;
 
 import java.util.List;
 

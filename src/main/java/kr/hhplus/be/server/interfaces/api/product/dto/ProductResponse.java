@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.dto.response;
+package kr.hhplus.be.server.interfaces.api.product.dto;
 
 import java.math.BigDecimal;
 
