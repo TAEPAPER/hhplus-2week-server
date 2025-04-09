@@ -1,22 +1,25 @@
 package kr.hhplus.be.server.interfaces.api.point.dto;
 
+import kr.hhplus.be.server.domain.point.Point;
+
 import java.math.BigDecimal;
 
 // BalanceResponse
 public class PointResponse {
-    private Long userId;
-    private BigDecimal balance;
 
-    public PointResponse(Long userId, BigDecimal balance) {
-        this.userId  = userId;
-        this.balance = balance;
+    private long userId;
+    private long balance;
+
+    public PointResponse(long userId, long amount) {
+        this.userId = userId;
+        this.balance = amount;
     }
 
-    public Long getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public BigDecimal getBalance() {
+    public long getBalance() {
         return balance;
     }
 }

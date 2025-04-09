@@ -4,24 +4,22 @@ import java.math.BigDecimal;
 
 public class PointChargeRequest {
 
-    private Long userId;
-    private BigDecimal amount;
+    private long userId;
+    private long amount;
 
-    // 👇 필수: 기본 생성자 (스프링이 역직렬화할 때 필요)
     public PointChargeRequest() {}
 
-    public PointChargeRequest(Long userId, BigDecimal amount) {
+    public PointChargeRequest(Long userId, long amount) {
         this.userId = userId;
         this.amount = amount;
     }
 
-    public Long getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public BigDecimal getAmount() {
+    public long getAmount() {
         return amount;
     }
 
-    // (선택) setter 도 추가 가능
 }

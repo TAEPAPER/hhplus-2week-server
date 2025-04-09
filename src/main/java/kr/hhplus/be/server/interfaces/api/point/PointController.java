@@ -1,34 +1,31 @@
 package kr.hhplus.be.server.interfaces.api.point;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
+import kr.hhplus.be.server.application.point.PointFacade;
 import kr.hhplus.be.server.interfaces.api.point.dto.PointChargeRequest;
 import kr.hhplus.be.server.interfaces.api.point.dto.PointResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/point")
-@Tag(name = "잔액", description = "잔액 충전 및 조회 API")
-public class PointController {
+@RequiredArgsConstructor
+public class PointController implements PointApi {
 
-    private final Map<Long, BigDecimal> wallet = new ConcurrentHashMap<>();
+    private final PointFacade pointFacade;
 
-    @Operation(summary = "잔액 충전")
+    @Override
     @PostMapping("/charge")
-    public ResponseEntity<Void> charge(@RequestBody PointChargeRequest request) {
-        wallet.merge(request.getUserId(), request.getAmount(), BigDecimal::add);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<PointResponse> charge(PointChargeRequest request) {
+        return ResponseEntity.ok(
+                pointFacade.charge(request.getUserId(), request.getAmount()).toDto()
+        );
     }
 
-    @Operation(summary = "잔액 조회")
-    @GetMapping("/{userId}")
+    @Override
     public ResponseEntity<PointResponse> get(@PathVariable("userId") Long userId) {
-        BigDecimal point = wallet.getOrDefault(userId, BigDecimal.ZERO);
-        return ResponseEntity.ok(new PointResponse(userId, point));
+        return ResponseEntity.ok(new PointResponse(userId, 1000));
     }
 }
