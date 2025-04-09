@@ -1,40 +1,21 @@
 package kr.hhplus.be.server.interfaces.api.product.dto;
 
-import java.math.BigDecimal;
+import kr.hhplus.be.server.domain.product.Product;
+import lombok.Getter;
 
-// ProductResponse
+@Getter
 public class ProductResponse {
-    private Long productId;
-    private String name;
-    private BigDecimal price;
-    private int stock;
-    private String description;
 
-    public ProductResponse(long productId, String name, BigDecimal price, int stock, String description) {
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
-        this.description = description;
+    private final long id;
+    private final String name;
+    private final long price;
+    private final String description;
+
+    public ProductResponse(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.description = product.getDescription();
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }
