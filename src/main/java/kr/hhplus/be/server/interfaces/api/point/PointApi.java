@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "포인트", description = "포인트 충전 및 조회 API")
+@Tag(name = "포인트", description = "포인트 충전")
 public interface PointApi {
     @Operation(summary = "포인트를 충전합니다")
     @ApiResponses({
@@ -36,15 +36,4 @@ public interface PointApi {
 
     ResponseEntity<PointResponse> charge(@RequestBody @Validated PointChargeRequest request);
 
-    @Operation(summary = "포인트을 조회합니다")
-    @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(mediaType = "application/json", examples = {
-            @ExampleObject(name = "조회 성공 예시", value = """
-                    {
-                        "userId": 1,
-                        "balance": 15000
-                    }
-                    """)
-    }))
-
-    ResponseEntity<PointResponse> get(@PathVariable("userId") Long userId);
 }

@@ -24,8 +24,4 @@ public class PointController implements PointApi {
         );
     }
 
-    @Override
-    public ResponseEntity<PointResponse> get(@PathVariable("userId") Long userId) {
-        return ResponseEntity.ok(new PointResponse(userId, 1000));
-    }
 }
