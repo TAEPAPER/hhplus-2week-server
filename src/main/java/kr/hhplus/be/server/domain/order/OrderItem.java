@@ -11,8 +11,12 @@ public class OrderItem {
         this.unitPrice = unitPrice;
     }
 
-    public long getUnitPrice() {
-        return unitPrice;
+    public long getProductId() {
+        return productId;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }
 

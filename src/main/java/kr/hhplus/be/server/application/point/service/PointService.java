@@ -12,12 +12,13 @@ public class PointService {
     private final PointRepository pointRepository;
 
     public Point charge(long userId, long amount) {
-        Point point = pointRepository.findById(userId).orElseThrow();
-        pointRepository.save(point.charge(amount));
-        return point;
+        Point point = pointRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("포인트 정보가 없습니다!"));
+        point = point.charge(amount);
+        return pointRepository.save(point);
     }
 
 
-
-
+    public Point getPointByUserId(long userId) {
+        return pointRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("포인트 정보가 없습니다!"));
+    }
 }

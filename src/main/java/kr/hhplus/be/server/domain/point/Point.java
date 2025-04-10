@@ -31,4 +31,16 @@ public class Point {
         return new Point(this.userId, totalAmount);
     }
 
+    public Point use(long paymentAmount) {
+        if (paymentAmount <= 0) {
+            throw new IllegalArgumentException("사용 금액은 0보다 커야 합니다.");
+        }
+        long totalAmount = this.amount - paymentAmount;
+
+        if (totalAmount < 0) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+
+        return new Point(this.userId, totalAmount);
+    }
 }

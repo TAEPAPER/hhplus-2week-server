@@ -5,11 +5,13 @@ import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.product.Product;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 public class Order {
 
+    private long orderId;
     private long userId;
     private OrderStatus orderStatus;
     private List<OrderItem> items;
@@ -28,6 +30,24 @@ public class Order {
 
     public OrderStatus getOrderStatus() {
         return orderStatus;
+    }
+
+    public long getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+
+    public List<OrderItem> getOrderItems() {
+        return items;
     }
 
     public static Order create(long userId, List<ProductQuantity> productQuantities, Coupon coupon) {
@@ -55,6 +75,7 @@ public class Order {
 
         return new Order(userId, orderItems, OrderStatus.CREATED ,totalPrice);
     }
+
     public record ProductQuantity(Product product, int quantity) {}
 }
 

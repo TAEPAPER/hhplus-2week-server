@@ -8,6 +8,7 @@ import kr.hhplus.be.server.interfaces.api.order.dto.OrderResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -15,12 +16,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/orders")
 public class OrderController implements OrderApi{
 
     private final OrderFacade orderFacade;
 
     @Override
-    @PostMapping("/orders")
+    @PostMapping("/order")
     public ResponseEntity<OrderResponse> order(OrderRequest request) {
         Map<Long, Integer> productQuantities = request.getOrderItems().stream()
                 .collect(Collectors.toMap(OrderItemRequest::getProductId, OrderItemRequest::getQuantity));

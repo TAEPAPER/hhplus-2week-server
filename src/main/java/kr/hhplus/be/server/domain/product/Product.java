@@ -1,13 +1,12 @@
 package kr.hhplus.be.server.domain.product;
 
-import lombok.Getter;
-
 public class Product {
 
     private  long id;
     private  String name;
     private  long price;
     private  Inventory inventory;
+    private String description;
 
 
     public void isStockAvailable(int quantity) {
@@ -18,4 +17,6 @@ public class Product {
 
     public long getId() { return id; }
     public long getPrice() { return price; }
+    public String getName() { return name;}
+    public String getDescription() { return description;}
 }

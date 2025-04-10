@@ -31,4 +31,13 @@ public class ProductService {
                         entry.getValue()
                 )).toList();
     }
+
+    // ProductService에 재고 확인 로직 추가
+    public void validateStockAvailability(List<Order.ProductQuantity> productQuantities) {
+        for (Order.ProductQuantity pq : productQuantities) {
+            Product product = pq.product();
+            int quantity = pq.quantity();
+            product.isStockAvailable(quantity);
+        }
+    }
 }

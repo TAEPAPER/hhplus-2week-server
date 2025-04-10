@@ -10,6 +10,7 @@ public class OrderResponse {
     private String status;
 
     public OrderResponse(Order order) {
+        this.orderId = order.getOrderId();
         this.userId = order.getUserId();
         this.status = order.getOrderStatus().name();
     }
