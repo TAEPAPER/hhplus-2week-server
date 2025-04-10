@@ -8,6 +8,10 @@ public class Product {
     private  Inventory inventory;
     private String description;
 
+    public long getId() { return id; }
+    public long getPrice() { return price; }
+    public String getName() { return name;}
+    public String getDescription() { return description;}
 
     public void isStockAvailable(int quantity) {
         if (!inventory.hasEnough(quantity)) {
@@ -15,10 +19,6 @@ public class Product {
         }
     }
 
-    public long getId() { return id; }
-    public long getPrice() { return price; }
-    public String getName() { return name;}
-    public String getDescription() { return description;}
 
     public void deduct(int quantity) {
         if (!inventory.hasEnough(quantity)) {
