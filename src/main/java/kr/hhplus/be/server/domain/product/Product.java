@@ -19,4 +19,11 @@ public class Product {
     public long getPrice() { return price; }
     public String getName() { return name;}
     public String getDescription() { return description;}
+
+    public void deduct(int quantity) {
+        if (!inventory.hasEnough(quantity)) {
+            throw new IllegalStateException("재고 부족으로 차감 불가");
+        }
+        this.inventory.deduct(quantity);
+    }
 }

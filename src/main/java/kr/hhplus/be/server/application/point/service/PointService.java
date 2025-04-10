@@ -17,8 +17,9 @@ public class PointService {
         return pointRepository.save(point);
     }
 
-
     public Point getPointByUserId(long userId) {
         return pointRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("포인트 정보가 없습니다!"));
     }
+
+
 }

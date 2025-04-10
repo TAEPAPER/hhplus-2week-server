@@ -40,4 +40,13 @@ public class ProductService {
             product.isStockAvailable(quantity);
         }
     }
+
+    public void deductStock(List<Order.ProductQuantity> productQuantities) {
+        for (Order.ProductQuantity pq : productQuantities) {
+            Product product = pq.product();
+            int quantity = pq.quantity();
+            product.deduct(quantity);
+            productRepository.save(product);
+        }
+    }
 }

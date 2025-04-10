@@ -18,4 +18,10 @@ public class PointHistoryService {
         pointHistoryRepository.save(history);
         return history;
     }
+
+    public PointHistory recordUse(long userId, long amount) {
+        PointHistory history = PointHistory.createUseHistory(userId, amount, clockHolder);
+        pointHistoryRepository.save(history);
+        return history;
+    }
 }
