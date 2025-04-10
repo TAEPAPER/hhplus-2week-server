@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.pointHistory;
+package kr.hhplus.be.server.domain;
 
 import kr.hhplus.be.server.application.common.ClockHolder;
 import lombok.RequiredArgsConstructor;
