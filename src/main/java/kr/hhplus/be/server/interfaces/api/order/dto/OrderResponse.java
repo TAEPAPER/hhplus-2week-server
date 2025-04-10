@@ -1,27 +1,19 @@
 package kr.hhplus.be.server.interfaces.api.order.dto;
 
-import java.math.BigDecimal;
+
+import kr.hhplus.be.server.domain.order.Order;
 
 public class OrderResponse {
-    private Long orderId;
-    private Long paymentId;
-    private BigDecimal finalAmount;
 
-    public OrderResponse(Long orderId,Long paymentId, BigDecimal finalAmount) {
-        this.orderId = orderId;
-        this.paymentId = paymentId;
-        this.finalAmount = finalAmount;
+    private long orderId;
+    private long userId;
+    private String status;
+
+    public OrderResponse(Order order) {
+        this.userId = order.getUserId();
+        this.status = order.getOrderStatus().name();
     }
 
-    public Long getOrderId() {
-        return orderId;
-    }
 
-    public Long getPaymentId() {
-        return paymentId;
-    }
-
-    public BigDecimal getFinalAmount() {
-        return finalAmount;
-    }
 }
+
