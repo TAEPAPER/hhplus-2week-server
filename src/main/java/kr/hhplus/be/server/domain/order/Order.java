@@ -1,11 +1,9 @@
 package kr.hhplus.be.server.domain.order;
 
-import jakarta.annotation.Nullable;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.product.Product;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
