@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.order;
 
+import jakarta.annotation.Nullable;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.product.Product;
 
@@ -21,6 +22,14 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
+    public long getUserId() {
+        return userId;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
     public static Order create(long userId, List<ProductQuantity> productQuantities, Coupon coupon) {
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -39,7 +48,7 @@ public class Order {
         }
 
         // 쿠폰 적용
-        if (coupon != null && coupon.isValid()) {
+        if (coupon.isValid()) {
             totalPrice -= coupon.calculateDiscount(totalPrice);
             totalPrice = Math.max(totalPrice, 0);
         }

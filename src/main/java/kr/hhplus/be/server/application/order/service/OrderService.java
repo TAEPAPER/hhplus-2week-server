@@ -14,30 +14,7 @@ import java.util.Map;
 
 public class OrderService {
 
-    private final ProductRepository productRepository;
-    private final OrderRepository orderRepository;
-    private final CouponRepository couponRepository
-
-    public OrderService(ProductRepository productRepository, OrderRepository orderRepository, CouponRepository couponRepository){
-        this.productRepository = productRepository;
-        this.orderRepository = orderRepository;
-        this.couponRepository = couponRepository;
-    }
-
     public Order placeOrder(long userId, List<Order.ProductQuantity> quantities,  Coupon coupon){
-
-       /* // 물품별 현재 재고를 조회
-        List<Order.ProductQuantity> quantities = productQuantities.entrySet().stream()
-                .map(entry -> new Order.ProductQuantity(
-                        productRepository.findById(entry.getKey()),
-                        entry.getValue()
-                )).toList();
-
-        // 쿠폰을 조회
-        Coupon coupon = couponRepository.findById(couponId);
-
-        Order order = Order.create(userId, quantities, coupon);
-        orderRepository.save(order);*/
         Order order = Order.create(userId, quantities, coupon);
         return order;
     }

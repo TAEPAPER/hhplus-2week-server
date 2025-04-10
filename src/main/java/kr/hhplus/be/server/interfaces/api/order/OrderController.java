@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.interfaces.api.order;
 
-import kr.hhplus.be.server.application.order.service.OrderService;
+import kr.hhplus.be.server.application.order.OrderFacade;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.interfaces.api.order.dto.OrderItemRequest;
 import kr.hhplus.be.server.interfaces.api.order.dto.OrderRequest;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderController implements OrderApi{
 
-    private final OrderService orderService;
+    private final OrderFacade orderFacade;
 
     @Override
     @PostMapping("/orders")
@@ -25,7 +25,7 @@ public class OrderController implements OrderApi{
         Map<Long, Integer> productQuantities = request.getOrderItems().stream()
                 .collect(Collectors.toMap(OrderItemRequest::getProductId, OrderItemRequest::getQuantity));
 
-        Order order = orderService.placeOrder(request.getUserId(), productQuantities, request.getCouponId());
+        Order order = orderFacade.order(request.getUserId(), productQuantities, request.getCouponId());
 
         return ResponseEntity.ok(new OrderResponse(order));
     }

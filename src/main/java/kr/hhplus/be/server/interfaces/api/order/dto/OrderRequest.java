@@ -1,14 +1,16 @@
 package kr.hhplus.be.server.interfaces.api.order.dto;
 
+import jakarta.annotation.Nullable;
+
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 public class OrderRequest {
 
     private long userId;
     private List<OrderItemRequest> orderItems;
-    private long couponId; // Optional 사용
+    @Nullable
+    private long couponId;
 
     public OrderRequest(long userId, List<OrderItemRequest> orderItems, long couponId) {
         this.userId = userId;

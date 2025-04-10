@@ -15,10 +15,6 @@ public class Coupon {
         this.isExpired = isExpired;
     }
 
-    public Long getCouponId() {
-        return couponId;
-    }
-
     public long calculateDiscount(long totalAmount) {
         return couponPolicy.applyDiscount(totalAmount);
     }
