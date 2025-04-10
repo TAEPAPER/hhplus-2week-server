@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.order;
 
-import kr.hhplus.be.server.domain.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.product.Product;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class Order {
         return items;
     }
 
-    public static Order create(long userId, List<ProductQuantity> productQuantities, Coupon coupon) {
+    public static Order create(long userId, List<ProductQuantity> productQuantities, IssuedCoupon coupon) {
 
         List<OrderItem> orderItems = new ArrayList<>();
         long totalPrice = 0;

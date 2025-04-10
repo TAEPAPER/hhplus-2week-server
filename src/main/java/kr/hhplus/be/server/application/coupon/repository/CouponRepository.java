@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application.coupon.repository;
 
-import kr.hhplus.be.server.domain.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 
 public interface CouponRepository {
-    Coupon findById(Long couponId);
+    IssuedCoupon findById(Long couponId);
 }

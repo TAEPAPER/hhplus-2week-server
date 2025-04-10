@@ -1,16 +1,11 @@
 package kr.hhplus.be.server.application.order;
 
-import jakarta.annotation.Nullable;
 import kr.hhplus.be.server.application.coupon.service.CouponService;
 import kr.hhplus.be.server.application.order.service.OrderService;
-import kr.hhplus.be.server.application.payment.service.PaymentService;
-import kr.hhplus.be.server.application.point.service.PointService;
-import kr.hhplus.be.server.application.pointHistory.service.PointHistoryService;
 import kr.hhplus.be.server.application.product.service.ProductService;
-import kr.hhplus.be.server.domain.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
 import kr.hhplus.be.server.domain.order.Order;
-import kr.hhplus.be.server.interfaces.api.order.dto.OrderRequest;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -29,7 +24,7 @@ public class OrderFacade {
         List<Order.ProductQuantity> quantities = productService.getProductsStock(productQuantities);
 
         // 쿠폰 조회
-        Coupon coupon = (couponId > 0) ? couponService.getById(couponId) : new NoCoupon();
+        IssuedCoupon coupon = (couponId > 0) ? couponService.getById(couponId) : new NoCoupon();
 
         //주문 생성
         Order order = orderService.placeOrder(userId, quantities, coupon);

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application.order.service;
 
 import kr.hhplus.be.server.application.order.repository.OrderRepository;
-import kr.hhplus.be.server.domain.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.order.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public Order placeOrder(long userId, List<Order.ProductQuantity> quantities,  Coupon coupon){
+    public Order placeOrder(long userId, List<Order.ProductQuantity> quantities,  IssuedCoupon coupon){
         Order order = Order.create(userId, quantities, coupon);
         orderRepository.save(order);
         return order;

@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.coupon;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -8,7 +7,7 @@ import org.mockito.MockitoAnnotations;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-class CouponTest {
+class IssuedCouponTest {
 
     @Mock
     private CouponPolicy couponPolicy;
@@ -21,7 +20,7 @@ class CouponTest {
         long discountAmount = 2000L;
         when(couponPolicy.applyDiscount(totalAmount)).thenReturn(discountAmount);
 
-        Coupon coupon = new Coupon(1L, couponPolicy, false, false);
+        IssuedCoupon coupon = new IssuedCoupon(1L, couponPolicy, false, false);
 
         // when
         long result = coupon.calculateDiscount(totalAmount);
@@ -34,8 +33,8 @@ class CouponTest {
     @Test
     void isValid_만료_또는_사용된_쿠폰() {
         // given
-        Coupon expiredCoupon = new Coupon(1L, couponPolicy, false, true);
-        Coupon usedCoupon = new Coupon(2L, couponPolicy, true, false);
+        IssuedCoupon expiredCoupon = new IssuedCoupon(1L, couponPolicy, false, true);
+        IssuedCoupon usedCoupon = new IssuedCoupon(2L, couponPolicy, true, false);
 
         // when
         boolean isExpiredCouponValid = expiredCoupon.isValid();
@@ -49,7 +48,7 @@ class CouponTest {
     @Test
     void isValid_유효한_쿠폰() {
         // given
-        Coupon validCoupon = new Coupon(1L, couponPolicy, false, false);
+        IssuedCoupon validCoupon = new IssuedCoupon(1L, couponPolicy, false, false);
 
         // when
         boolean isValid = validCoupon.isValid();

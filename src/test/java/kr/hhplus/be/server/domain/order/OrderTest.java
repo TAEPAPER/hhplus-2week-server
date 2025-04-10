@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.order;
 
-import kr.hhplus.be.server.domain.coupon.Coupon;
+import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class OrderTest {
     private Product product;
 
     @Mock
-    private Coupon coupon;
+    private IssuedCoupon coupon;
 
     @Test
     @DisplayName("Order 생성 테스트 - 정상적인 경우")

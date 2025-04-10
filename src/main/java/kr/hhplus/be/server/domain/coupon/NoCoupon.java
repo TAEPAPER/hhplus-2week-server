@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.coupon;
 
-public class NoCoupon extends Coupon {
+public class NoCoupon extends IssuedCoupon {
 
     public NoCoupon() {
         super(0L, null, false, false);

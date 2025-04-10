@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.domain.coupon;
 
-public class Coupon {
+public class IssuedCoupon {
 
 
     private long couponId;
@@ -8,7 +8,7 @@ public class Coupon {
     private boolean isUsed;
     private boolean isExpired;
 
-    public Coupon(Long id, CouponPolicy couponPolicy, boolean isUsed, boolean isExpired) {
+    public IssuedCoupon(Long id, CouponPolicy couponPolicy, boolean isUsed, boolean isExpired) {
         this.couponId = id;
         this.couponPolicy = couponPolicy;
         this.isUsed = isUsed;
