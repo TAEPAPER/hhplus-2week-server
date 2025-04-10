@@ -75,5 +75,6 @@ public class Order {
     }
 
     public record ProductQuantity(Product product, int quantity) {}
+
 }
 
