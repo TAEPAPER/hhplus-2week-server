@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.coupon.service;
 
 
+import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Service
@@ -16,10 +19,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class CouponService {
 
     private final IssuedCouponRepository issuedCouponRepository;
-    private final List<IssuedCoupon> issuedCoupons = new ArrayList<>();
-    private final int maxCoupons = 5;
-    private final ReentrantLock lock = new ReentrantLock();
-
+    // 쿠폰 ID별 Lock 보관소
+    private final Map<Long, ReentrantLock> lockMap = new ConcurrentHashMap<>();
 
     public IssuedCoupon getById(long couponId) {
         if (couponId <= 0) {
@@ -28,5 +29,11 @@ public class CouponService {
         return issuedCouponRepository.findById(couponId);
     }
 
+    public void issueCoupon(long userId, long couponId) {
+        // 쿠폰별 락 가져오기
+        ReentrantLock lock = lockMap.computeIfAbsent(couponId, id -> new ReentrantLock());
 
+
+
+    }
 }

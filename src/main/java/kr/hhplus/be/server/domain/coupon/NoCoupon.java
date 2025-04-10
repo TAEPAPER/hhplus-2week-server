@@ -3,7 +3,7 @@ package kr.hhplus.be.server.domain.coupon;
 public class NoCoupon extends IssuedCoupon {
 
     public NoCoupon() {
-        super(0L, null, false, false);
+        super(0L, 0L,null, false, false);
     }
 
     @Override

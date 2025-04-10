@@ -4,12 +4,14 @@ public class IssuedCoupon {
 
 
     private long couponId;
+    private long userId;
     private CouponPolicy couponPolicy;
     private boolean isUsed;
     private boolean isExpired;
 
-    public IssuedCoupon(Long id, CouponPolicy couponPolicy, boolean isUsed, boolean isExpired) {
-        this.couponId = id;
+    public IssuedCoupon(Long userId, Long couponId, CouponPolicy couponPolicy, boolean isUsed, boolean isExpired) {
+        this.userId = userId;
+        this.couponId = couponId;
         this.couponPolicy = couponPolicy;
         this.isUsed = isUsed;
         this.isExpired = isExpired;
