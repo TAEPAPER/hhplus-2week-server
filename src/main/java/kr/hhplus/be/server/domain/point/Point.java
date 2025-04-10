@@ -1,7 +1,5 @@
 package kr.hhplus.be.server.domain.point;
 
-import kr.hhplus.be.server.domain.pointHistory.PointHistory;
-
 public class Point {
 
     private long userId;
