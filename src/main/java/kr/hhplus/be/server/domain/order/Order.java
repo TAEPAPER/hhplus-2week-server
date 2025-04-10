@@ -1,27 +1,30 @@
 package kr.hhplus.be.server.domain.order;
 
+import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.product.Product;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+
 public class Order {
 
-    private final long userId;
-    private final OrderStatus orderStatus;
-    private final List<OrderItem> items;
+    private long userId;
+    private OrderStatus orderStatus;
+    private List<OrderItem> items;
+    private long totalPrice;
 
-    public Order( long userId, List<OrderItem> items, OrderStatus orderStatus) {
+    public Order( long userId, List<OrderItem> items, OrderStatus orderStatus, long totalPrice) {
         this.userId = userId;
         this.orderStatus = orderStatus;
         this.items = items;
+        this.totalPrice = totalPrice;
     }
 
-    public static Order create(long userId, List<ProductQuantity> productQuantities) {
+    public static Order create(long userId, List<ProductQuantity> productQuantities, Coupon coupon) {
 
         List<OrderItem> orderItems = new ArrayList<>();
+        long totalPrice = 0;
 
         for (ProductQuantity pq : productQuantities) {
             Product product = pq.product();
@@ -30,11 +33,18 @@ public class Order {
             // 재고 확인
             product.isStockAvailable(quantity);
 
-            long totalPrice = product.getPrice() * quantity;
-            orderItems.add(new OrderItem(product.getId(), quantity, totalPrice));
+            long unitPrice = product.getPrice() * quantity;
+            totalPrice += unitPrice;
+            orderItems.add(new OrderItem(product.getId(), quantity, unitPrice));
         }
 
-        return new Order(userId, orderItems, OrderStatus.CREATED);
+        // 쿠폰 적용
+        if (coupon != null && coupon.isValid()) {
+            totalPrice -= coupon.calculateDiscount(totalPrice);
+            totalPrice = Math.max(totalPrice, 0);
+        }
+
+        return new Order(userId, orderItems, OrderStatus.CREATED ,totalPrice);
     }
     public record ProductQuantity(Product product, int quantity) {}
 }

@@ -25,7 +25,7 @@ public class OrderController implements OrderApi{
         Map<Long, Integer> productQuantities = request.getOrderItems().stream()
                 .collect(Collectors.toMap(OrderItemRequest::getProductId, OrderItemRequest::getQuantity));
 
-        Order order = orderService.placeOrder(request.getUserId(), productQuantities);
+        Order order = orderService.placeOrder(request.getUserId(), productQuantities, request.getCouponId());
 
         return ResponseEntity.ok(new OrderResponse(order));
     }
