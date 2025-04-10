@@ -1,12 +1,11 @@
 package kr.hhplus.be.server.application.coupon.service;
 
 
-import kr.hhplus.be.server.domain.coupon.CouponPolicy;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
+import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @RequiredArgsConstructor
 public class CouponService {
 
-    private final CouponRepository couponRepository;
+    private final IssuedCouponRepository issuedCouponRepository;
     private final List<IssuedCoupon> issuedCoupons = new ArrayList<>();
     private final int maxCoupons = 5;
     private final ReentrantLock lock = new ReentrantLock();
@@ -26,7 +25,7 @@ public class CouponService {
         if (couponId <= 0) {
             return new NoCoupon(); // 기본 객체 반환
         }
-        return couponRepository.findById(couponId);
+        return issuedCouponRepository.findById(couponId);
     }
 
 
