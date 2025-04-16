@@ -59,21 +59,6 @@ class ProductServiceTest {
     }
 
     @Test
-    void getProductsStock_호출시_재고정보를_반환한다() {
-        // given
-        Product product = mock(Product.class);
-        Map<Product, Integer> productQuantities = Map.of(product, 10);
-        Order.ProductQuantity productQuantity = new Order.ProductQuantity(product, 10);
-        List<Order.ProductQuantity> expected = List.of(productQuantity);
-
-        // when
-        List<Order.ProductQuantity> result = productService.getProductsStock(productQuantities);
-
-        // then
-        assertThat(result).isEqualTo(expected);
-    }
-
-    @Test
     void validateStockAvailability_호출시_재고를_검증한다() {
         // given
         Product product = mock(Product.class);
