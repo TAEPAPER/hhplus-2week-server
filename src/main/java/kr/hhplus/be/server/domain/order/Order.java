@@ -14,7 +14,11 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "orders")
 public class Order {
+    // 기본 생성자 추가
+    protected Order() {
+    }
 
 
     @Id

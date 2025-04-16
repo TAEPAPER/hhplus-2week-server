@@ -18,6 +18,7 @@ public class IssuedCoupon {
     private Long id;
 
     @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

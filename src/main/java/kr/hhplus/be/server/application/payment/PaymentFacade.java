@@ -11,11 +11,12 @@ import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.point.Point;
 import lombok.RequiredArgsConstructor;
 import kr.hhplus.be.server.domain.order.OrderItem;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Service
 @RequiredArgsConstructor
 public class PaymentFacade {
 

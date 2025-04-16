@@ -22,6 +22,11 @@ public class OrderItem {
     @Column(name="unit_price")
     private long unitPrice;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
     public OrderItem(Product product, int quantity, long unitPrice) {
         this.product = product;
         this.quantity = quantity;

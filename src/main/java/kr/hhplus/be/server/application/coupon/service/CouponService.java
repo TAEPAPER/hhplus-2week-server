@@ -9,7 +9,6 @@ import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
 import kr.hhplus.be.server.domain.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
 
@@ -47,7 +46,7 @@ public class CouponService {
         lock.lock();
         try {
             // 2. 이미 발급받았는지 확인
-            if (couponRepository.existsByUserIdAndCouponId(userId, couponId)) {
+            if (couponRepository.existsById(userId, couponId)) {
                 throw new IllegalStateException("이미 발급받은 쿠폰입니다.");
             }
 

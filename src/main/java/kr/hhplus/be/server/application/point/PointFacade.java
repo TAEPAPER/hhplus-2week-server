@@ -7,7 +7,9 @@ import kr.hhplus.be.server.domain.point.Point;
 import kr.hhplus.be.server.domain.point.PointChargeResult;
 import kr.hhplus.be.server.domain.pointHistory.PointHistory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class PointFacade {
 

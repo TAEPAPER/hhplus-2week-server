@@ -1,26 +1,20 @@
 package kr.hhplus.be.server.interfaces.api.point.dto;
 
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
+@Getter
+@NoArgsConstructor
 public class PointChargeRequest {
 
-    private long userId;
-    private long amount;
+    private Long userId;
+    private Long amount;
 
-    @Builder
-    public PointChargeRequest(Long userId, long amount) {
+    @JsonCreator
+    public PointChargeRequest(@JsonProperty("userId") Long userId, @JsonProperty("amount") Long amount) {
         this.userId = userId;
         this.amount = amount;
     }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public long getAmount() {
-        return amount;
-    }
-
 }
