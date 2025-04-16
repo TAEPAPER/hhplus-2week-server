@@ -67,10 +67,9 @@ class PaymentFacadeTest {
         );
         when(user.getId()).thenReturn(userId);
         when(order.getUser()).thenReturn(user);
-        when(order.getOrderItems()).thenReturn(List.of(
-                new OrderItem(1L, 2, 1000L),
-                new OrderItem(2L, 1, 2000L)
-        ));
+        when(order.getId()).thenReturn(orderId);
+        when(order.getUser()).thenReturn(user);
+
         when(orderService.getOrderById(orderId)).thenReturn(order);
         when(productService.getProductsStock(Map.of(1L, 2, 2L, 1))).thenReturn(productQuantities);
         doNothing().when(productService).validateStockAvailability(productQuantities);
