@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.interfaces.api.point.dto;
 
+import lombok.Builder;
+
 import java.math.BigDecimal;
 
 public class PointChargeRequest {
@@ -7,8 +9,7 @@ public class PointChargeRequest {
     private long userId;
     private long amount;
 
-    public PointChargeRequest() {}
-
+    @Builder
     public PointChargeRequest(Long userId, long amount) {
         this.userId = userId;
         this.amount = amount;

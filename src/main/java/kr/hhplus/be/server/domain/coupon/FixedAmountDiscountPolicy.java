@@ -1,14 +1,13 @@
 package kr.hhplus.be.server.domain.coupon;
 
-public class FixedAmountDiscountPolicy implements CouponPolicy {
-    private final long discountAmount;
+import org.springframework.stereotype.Component;
 
-    public FixedAmountDiscountPolicy(long discountAmount) {
-        this.discountAmount = discountAmount;
-    }
+@Component("FIXED")
+public class FixedAmountDiscountPolicy implements CouponPolicy {
 
     @Override
-    public long applyDiscount(long totalAmount) {
+    public long applyDiscount(long totalAmount, int discountAmount) {
         return totalAmount - discountAmount;
     }
+
 }

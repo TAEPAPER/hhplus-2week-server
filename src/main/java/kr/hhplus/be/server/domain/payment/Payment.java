@@ -1,42 +1,51 @@
 package kr.hhplus.be.server.domain.payment;
 
+import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.order.OrderStatus;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor
 public class Payment {
 
-    private long paymentId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-    private PaymentStatus paymentStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private PaymentStatus status;
 
-    public Payment(Order order, PaymentStatus paymentStatus) {
+    @Column(name = "paid_at")
+    private LocalDateTime paidAt;
+
+    @Builder
+    private Payment(Order order, PaymentStatus status) {
         this.order = order;
-        this.paymentStatus = paymentStatus;
-    }
-
-    public String getPaymentStatus() {
-        return paymentStatus.name();
-    }
-
-    public long getPaymentId() {
-        return paymentId;
-    }
-
-    public Payment pay(Order order) {
-        if (order.getOrderStatus().name().equals(PaymentStatus.PAID.name())){
-            throw new IllegalStateException("이미 결제된 주문입니다.");
-        }
-        //order의 상태 변경
-        this.order.setOrderStatus(OrderStatus.PAID);
-        //결제 상태 변경
-        this.paymentStatus = PaymentStatus.PAID;
-        return this;
+        this.status = status;
     }
 
     public static Payment createPayment(Order order) {
-        // 결제 생성 로직
         return new Payment(order, PaymentStatus.PENDING);
     }
 
+    public void pay() {
+        if (this.status == PaymentStatus.PAID) {
+            throw new IllegalStateException("이미 결제된 주문입니다.");
+        }
+
+        this.status = PaymentStatus.PAID;
+        this.paidAt = LocalDateTime.now();
+        this.order.setOrderStatus(OrderStatus.PAID);
+    }
 }

@@ -10,5 +10,4 @@ public interface PointRepository {
 
     Point save(Point point);
 
-    Optional<Object> findByUserId(long userId);
 }

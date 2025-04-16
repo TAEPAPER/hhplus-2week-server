@@ -17,8 +17,8 @@ public class PointChargeResult {
 
     public PointResponse toDto() {
         return new PointResponse(
-                updatedPoint.getUserId(),
-                updatedPoint.getAmount()
+                updatedPoint.getUser().getId(),
+                updatedPoint.getBalance()
         );
     }
 }

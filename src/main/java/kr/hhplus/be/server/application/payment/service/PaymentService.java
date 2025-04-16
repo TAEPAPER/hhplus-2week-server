@@ -23,7 +23,7 @@ public class PaymentService {
 
         // 결제 처리
         Payment payment = Payment.createPayment(order);
-        payment.pay(order);
+        payment.pay();
 
         // 결제 상태 저장
         paymentRepository.save(payment);

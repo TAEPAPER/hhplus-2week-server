@@ -35,13 +35,13 @@ public class PaymentFacade {
         productService.validateStockAvailability(productQuantities);
 
         //보유 포인트 조회
-        Point point = pointService.getPointByUserId(order.getUserId());
+        Point point = pointService.getPointByUserId(order.getUser().getId());
 
         // 결제 처리
         Payment payment = paymentService.processPayment(order, point);
 
         //포인트 사용 이력 저장
-        pointHistoryService.recordUse(order.getUserId(), order.getTotalPrice());
+        pointHistoryService.recordUse(order.getUser().getId(), order.getTotalPrice());
 
         // 재고 차감
         productService.deductStock(productQuantities);

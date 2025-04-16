@@ -1,31 +1,68 @@
 package kr.hhplus.be.server.domain.coupon;
 
+import jakarta.persistence.*;
+import kr.hhplus.be.server.domain.user.User;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor
 public class IssuedCoupon {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private long couponId;
-    private long userId;
-    private CouponPolicy couponPolicy;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id", nullable = false)
+    private Coupon coupon;
+
+    @Column(name = "is_used", nullable = false)
     private boolean isUsed;
-    private boolean isExpired;
 
-    public IssuedCoupon(Long userId, Long couponId, CouponPolicy couponPolicy, boolean isUsed, boolean isExpired) {
-        this.userId = userId;
-        this.couponId = couponId;
-        this.couponPolicy = couponPolicy;
-        this.isUsed = isUsed;
-        this.isExpired = isExpired;
+    @Column(name = "issued_at", nullable = false)
+    private LocalDateTime issuedAt;
+
+    @Column(name = "expired_at", nullable = false)
+    private LocalDateTime expiredAt;
+
+    @Builder
+    public IssuedCoupon(User user, Coupon coupon, LocalDateTime issuedAt) {
+        this.user = user;
+        this.coupon = coupon;
+        this.issuedAt = issuedAt;
+
+        // 쿠폰 만료일 계산
+        if (coupon.getValidUnit().equals("days")) {
+            this.expiredAt = issuedAt.plusDays(coupon.getValidValue());
+        } else if (coupon.getValidUnit().equals("months")) {
+            this.expiredAt = issuedAt.plusMonths(coupon.getValidValue());
+        } else if (coupon.getValidUnit().equals("years")) {
+            this.expiredAt = issuedAt.plusYears(coupon.getValidValue());
+        } else {
+            throw new IllegalArgumentException("Invalid valid unit: " + coupon.getValidUnit());
+        }
+
+
+        this.isUsed = false;
     }
 
     public long calculateDiscount(long totalAmount) {
-        return couponPolicy.applyDiscount(totalAmount);
+        return coupon.applyDiscount(totalAmount);
     }
 
     public boolean isValid() {
-        //만기 여부, 사용 여부 체크
-        if (isExpired || isUsed) {
-            return false;
-        }
-        return true;
+        return !isUsed && expiredAt.isAfter(LocalDateTime.now());
+    }
+
+    public void markAsUsed() {
+        this.isUsed = true;
     }
 }

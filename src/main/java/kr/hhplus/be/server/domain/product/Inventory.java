@@ -1,10 +1,35 @@
 package kr.hhplus.be.server.domain.product;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor
 public class Inventory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // 상품 연관관계
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column(nullable = false)
     private int stock;
 
-    public Inventory(int stock) {
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    public Inventory(Product product, int stock) {
+        this.product = product;
         this.stock = stock;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public boolean hasEnough(int quantity) {
@@ -16,5 +41,11 @@ public class Inventory {
             throw new IllegalStateException("재고 부족으로 차감 불가");
         }
         this.stock -= quantity;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void addStock(int quantity) {
+        this.stock += quantity;
+        this.updatedAt = LocalDateTime.now();
     }
 }
