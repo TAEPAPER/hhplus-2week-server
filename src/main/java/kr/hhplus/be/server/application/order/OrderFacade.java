@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.order;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.coupon.service.CouponService;
 import kr.hhplus.be.server.application.order.service.OrderService;
 import kr.hhplus.be.server.application.product.service.ProductService;
@@ -22,7 +23,7 @@ public class OrderFacade {
     private final CouponService couponService;
     private final UserService UserService;;
 
-
+    @Transactional
     public Order order (long userId, Map<Long, Integer> productQuantities, long couponId) {
         //사용자 정보 조회
         User user = UserService.getUserById(userId);

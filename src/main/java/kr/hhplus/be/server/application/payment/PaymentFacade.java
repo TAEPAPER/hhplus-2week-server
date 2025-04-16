@@ -28,12 +28,6 @@ public class PaymentFacade {
         // 주문 조회 및 검증
         Order order = orderService.getOrderById(orderId);
 
-        //재고 조회
-        List<Order.ProductQuantity> productQuantities = productService.getProductsStock(order.getOrderItems().stream()
-                .collect(Collectors.toMap(OrderItem::getProduct, OrderItem::getQuantity)));
-        //재고 확인
-        productService.validateStockAvailability(productQuantities);
-
         //보유 포인트 조회
         Point point = pointService.getPointByUserId(order.getUser().getId());
 
@@ -42,10 +36,6 @@ public class PaymentFacade {
 
         //포인트 사용 이력 저장
         pointHistoryService.recordUse(order.getUser().getId(), order.getTotalPrice());
-
-        // 재고 차감
-        productService.deductStock(productQuantities);
-
 
         return payment;
     }

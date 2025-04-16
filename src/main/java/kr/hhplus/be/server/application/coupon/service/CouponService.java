@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.coupon.service;
 
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.application.user.repository.UserRepository;
 import kr.hhplus.be.server.domain.coupon.Coupon;
@@ -35,6 +36,7 @@ public class CouponService {
         return issuedCouponRepository.findById(couponId);
     }
 
+    @Transactional
     public void issueCoupon(long userId, long couponId) {
         //유저 정보 조회
         User user = userRepository.findById(userId)
