@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.payment;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.order.service.OrderService;
 import kr.hhplus.be.server.application.payment.service.PaymentService;
 import kr.hhplus.be.server.application.point.service.PointService;
@@ -24,6 +25,7 @@ public class PaymentFacade {
     private final PointHistoryService pointHistoryService;
     private final ProductService productService;
 
+    @Transactional
     public Payment processPayment(long orderId) {
         // 주문 조회 및 검증
         Order order = orderService.getOrderById(orderId);
