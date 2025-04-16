@@ -1,15 +1,19 @@
-package kr.hhplus.be.server.application.coupon.service;
+package kr.hhplus.be.server.application.coupon;
 
 import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
+import kr.hhplus.be.server.application.coupon.service.CouponService;
+import kr.hhplus.be.server.application.user.repository.UserRepository;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +26,9 @@ class CouponServiceTest {
 
     @Mock
     private CouponRepository couponRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private CouponService couponService;
@@ -36,18 +43,27 @@ class CouponServiceTest {
         // Given
         long userId = 1L;
         long couponId = 1L;
-        Coupon coupon = mock(Coupon.class);
 
+        User user = User.builder().id(userId).name("Test User").build();
+        Coupon coupon = Coupon.builder().id(couponId).name("Test Coupon").discountAmount(1000).totalQuantity(30).validValue(20).validUnit("days").build();
+
+        IssuedCoupon issuedCoupon = IssuedCoupon.builder()
+                                .user(user)
+                                .coupon(coupon)
+                                .issuedAt(LocalDateTime.now())
+                                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(couponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(false);
         when(couponRepository.findById(couponId)).thenReturn(Optional.of(coupon));
-        when(couponRepository.countByCouponId(couponId)).thenReturn(3);
-        doNothing().when(coupon).isIssueAvailable(3);
+        when(couponRepository.countByCouponId(couponId)).thenReturn(0);
+        when(issuedCouponRepository.save(any(IssuedCoupon.class))).thenReturn(issuedCoupon);
 
         // When
-        assertDoesNotThrow(() -> couponService.issueCoupon(userId, couponId));
+        couponService.issueCoupon(userId, couponId);
 
         // Then
-        verify(issuedCouponRepository, times(1)).save(any(IssuedCoupon.class));
+        verify(issuedCouponRepository).save(any(IssuedCoupon.class));
     }
 
     @Test
@@ -56,6 +72,7 @@ class CouponServiceTest {
         long userId = 1L;
         long couponId = 1L;
 
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
         when(couponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(true);
 
         // When & Then
@@ -69,6 +86,7 @@ class CouponServiceTest {
         long userId = 1L;
         long couponId = 1L;
 
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
         when(couponRepository.findById(couponId)).thenReturn(Optional.empty());
 
         // When & Then
@@ -83,6 +101,7 @@ class CouponServiceTest {
         long couponId = 1L;
         Coupon coupon = mock(Coupon.class);
 
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
         when(couponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(false);
         when(couponRepository.findById(couponId)).thenReturn(Optional.of(coupon));
         when(couponRepository.countByCouponId(couponId)).thenReturn(5);

@@ -7,6 +7,7 @@ import kr.hhplus.be.server.domain.point.PointChargeResult;
 import kr.hhplus.be.server.domain.pointHistory.PointHistory;
 import kr.hhplus.be.server.domain.TestClockHolder;
 import kr.hhplus.be.server.domain.pointHistory.TransactionType;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -35,12 +36,21 @@ class PointFacadeTest {
     @Test
     void 사용자가_포인트를_충전하면_Point와_PointHistory가_반환된다() {
         // given
+        User user = User.builder()
+                        .id(1L)
+                        .build();
+
         long userId = 1L;
         long amount = 1000L;
         TestClockHolder testClockHolder = new TestClockHolder(1234567890);
 
-        Point point = new Point(userId, 2000L);
-        PointHistory pointHistory = new PointHistory(userId, amount, TransactionType.CHARGE, testClockHolder.millis());
+        Point point = Point.builder()
+                .userId(userId)
+                .user(user)
+                .balance(1000L)
+                .build();
+
+        PointHistory pointHistory = new PointHistory(point, amount, TransactionType.CHARGE);
 
         PointChargeResult expected = new PointChargeResult(point, pointHistory);
 

@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.domain.pointHistory;
 
 import kr.hhplus.be.server.domain.TestClockHolder;
+import kr.hhplus.be.server.domain.point.Point;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -11,11 +13,20 @@ class PointHistoryTest {
     @Test
     void 포인트_사용_이력을_생성한다() {
         //given
-        TestClockHolder testClockHolder = new TestClockHolder(1234567890);
-        PointHistory expected = new PointHistory(1L, 500L, TransactionType.USE, testClockHolder.millis());
+        User user = User.builder()
+                        .id(1L)
+                        .name("test")
+                        .build();
+        Point point = Point.builder()
+                        .userId(1L)
+                        .user(user)
+                        .balance(1000L)
+                        .build();
+
+        PointHistory expected = new PointHistory(point, 500L, TransactionType.USE);
 
         //when
-        PointHistory actual = PointHistory.createUseHistory(1L, 500L, testClockHolder);
+        PointHistory actual = PointHistory.createUseHistory(point, 500L);
 
         //then
         assertEquals(expected, actual);
@@ -24,11 +35,20 @@ class PointHistoryTest {
     @Test
     void 포인트_충전_이력을_생성한다() {
         //given
-        TestClockHolder testClockHolder = new TestClockHolder(1234567890);
-        PointHistory expected = new PointHistory(1L, 1000L, TransactionType.CHARGE, testClockHolder.millis());
+        User user = User.builder()
+                .id(1L)
+                .name("test")
+                .build();
+        Point point = Point.builder()
+                .userId(1L)
+                .user(user)
+                .balance(1000L)
+                .build();
+
+        PointHistory expected = new PointHistory(point, 500L, TransactionType.CHARGE);
 
         //when
-        PointHistory actual = PointHistory.createChargeHistory(1L, 1000L, testClockHolder);
+        PointHistory actual = PointHistory.createChargeHistory(point, 500L);
 
         //then
         assertEquals(expected, actual);

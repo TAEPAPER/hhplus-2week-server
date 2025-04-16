@@ -2,8 +2,8 @@ package kr.hhplus.be.server.application.point.service;
 
 import kr.hhplus.be.server.application.point.repository.PointRepository;
 import kr.hhplus.be.server.domain.point.Point;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,12 +31,21 @@ class PointServiceTest {
     @Test
     void 사용자가_포인트를_충전하면_포인트가_증가해야_한다() {
         // given
+        User user = User.builder().id(1L).name("test").build();
         long userId = 1L;
         long initialAmount = 1000L;
         long chargeAmount = 2000L;
 
-        Point existingPoint = new Point(userId, initialAmount);
-        Point updatedPoint = new Point(userId, initialAmount + chargeAmount);
+        Point existingPoint = Point.builder()
+                            .userId(userId)
+                            .user(user)
+                            .balance(initialAmount)
+                            .build();
+        Point updatedPoint = Point.builder()
+                            .userId(userId)
+                            .user(user)
+                            .balance(initialAmount + chargeAmount)
+                            .build();
 
         when(pointRepository.findById(userId)).thenReturn(Optional.of(existingPoint));
         when(pointRepository.save(any(Point.class))).thenReturn(updatedPoint);
@@ -45,8 +54,8 @@ class PointServiceTest {
         Point result = pointService.charge(userId, chargeAmount);
 
         // then
-        assertThat(result.getUserId()).isEqualTo(userId);
-        assertThat(result.getAmount()).isEqualTo(initialAmount + chargeAmount);
+        assertThat(result.getUser().getId()).isEqualTo(userId);
+        assertThat(result.getBalance()).isEqualTo(initialAmount + chargeAmount);
 
         verify(pointRepository, times(1)).findById(userId);
         verify(pointRepository, times(1)).save(any(Point.class));
@@ -55,7 +64,7 @@ class PointServiceTest {
     @Test
     void 존재하지_않는_사용자의_포인트를_충전하려고_하면_예외가_발생해야_한다() {
         // given
-        long userId = 1L;
+        Long userId = 1L;
         long chargeAmount = 2000L;
 
         when(pointRepository.findById(userId)).thenReturn(Optional.empty());
@@ -74,19 +83,23 @@ class PointServiceTest {
     @Test
     void 사용자의_포인트를_정상적으로_조회한다() {
         // given
-        long userId = 1L;
-        Point point = new Point(userId, 1000L);
+        User user = User.builder().id(1L).name("test").build();
+        Point point = Point.builder()
+                            .userId(1L)
+                            .user(user)
+                            .balance(1000L)
+                            .build();
 
-        when(pointRepository.findById(userId)).thenReturn(Optional.of(point));
+        when(pointRepository.findById(user.getId())).thenReturn(Optional.of(point));
 
         // when
-        Point result = pointService.getPointByUserId(userId);
+        Point result = pointService.getPointByUserId(user.getId());
 
         // then
-        assertThat(result.getUserId()).isEqualTo(userId);
-        assertThat(result.getAmount()).isEqualTo(1000L);
+        assertThat(result.getUser().getId()).isEqualTo(user.getId());
+        assertThat(result.getBalance()).isEqualTo(1000L);
 
-        verify(pointRepository, times(1)).findById(userId);
+        verify(pointRepository, times(1)).findById(user.getId());
     }
 
 

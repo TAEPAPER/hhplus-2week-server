@@ -1,10 +1,14 @@
 package kr.hhplus.be.server.application.pointHistory;
 
 import kr.hhplus.be.server.application.common.ClockHolder;
+import kr.hhplus.be.server.application.point.repository.PointRepository;
 import kr.hhplus.be.server.application.pointHistory.repository.PointHistoryRepository;
 import kr.hhplus.be.server.application.pointHistory.service.PointHistoryService;
 import kr.hhplus.be.server.domain.TestClockHolder;
+import kr.hhplus.be.server.domain.point.Point;
+
 import kr.hhplus.be.server.domain.pointHistory.PointHistory;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,6 +24,8 @@ class PointHistoryServiceTest {
     @Mock
     private PointHistoryRepository pointHistoryRepository;
 
+    @Mock
+    private PointRepository pointRepository;
 
     @Mock
     private ClockHolder clockHolder = new TestClockHolder(1234567890);
@@ -37,21 +43,22 @@ class PointHistoryServiceTest {
         // given
         long userId = 1L;
         long amount = 2000L;
-        long currentTimeMillis = 1234567890L;
 
-        when(clockHolder.millis()).thenReturn(currentTimeMillis);
+        User user = User.builder().id(userId).name("test").build();
+        Point point = Point.builder().userId(userId).user(user).balance(3000).build();
+
+        when(pointRepository.findById(userId)).thenReturn(java.util.Optional.of(point));
 
         try (MockedStatic<PointHistory> mockedPointHistory = mockStatic(PointHistory.class)) {
             PointHistory history = mock(PointHistory.class);
 
-            mockedPointHistory.when(() -> PointHistory.createChargeHistory(userId, amount, clockHolder))
+            mockedPointHistory.when(() -> PointHistory.createChargeHistory(point, amount))
                     .thenReturn(history);
 
             // when
             PointHistory result = pointHistoryService.recordCharge(userId, amount);
 
             // then
-
             verify(pointHistoryRepository, times(1)).save(history);
         }
     }
@@ -61,21 +68,22 @@ class PointHistoryServiceTest {
         // given
         long userId = 1L;
         long amount = 1000L;
-        long currentTimeMillis = 1234567890L;
 
-        when(clockHolder.millis()).thenReturn(currentTimeMillis);
+        User user = User.builder().id(userId).name("test").build();
+        Point point = Point.builder().userId(userId).user(user).balance(3000).build();
+
+        when(pointRepository.findById(userId)).thenReturn(java.util.Optional.of(point));
 
         try (MockedStatic<PointHistory> mockedPointHistory = mockStatic(PointHistory.class)) {
             PointHistory history = mock(PointHistory.class);
 
-            mockedPointHistory.when(() -> PointHistory.createUseHistory(userId, amount, clockHolder))
+            mockedPointHistory.when(() -> PointHistory.createUseHistory(point, amount))
                     .thenReturn(history);
 
             // when
             PointHistory result = pointHistoryService.recordUse(userId, amount);
 
             // then
-
             verify(pointHistoryRepository, times(1)).save(history);
         }
     }

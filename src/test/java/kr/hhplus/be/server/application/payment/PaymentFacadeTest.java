@@ -11,6 +11,7 @@ import kr.hhplus.be.server.domain.order.OrderItem;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.point.Point;
 import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -56,13 +57,16 @@ class PaymentFacadeTest {
         long userId = 100L;
         Order order = mock(Order.class);
         Point point = mock(Point.class);
+        User user = mock(User.class);
+
+
         Payment payment = mock(Payment.class);
         List<Order.ProductQuantity> productQuantities = List.of(
                 new Order.ProductQuantity(mock(Product.class), 2),
                 new Order.ProductQuantity(mock(Product.class), 1)
         );
-
-        when(order.getUserId()).thenReturn(userId);
+        when(user.getId()).thenReturn(userId);
+        when(order.getUser()).thenReturn(user);
         when(order.getOrderItems()).thenReturn(List.of(
                 new OrderItem(1L, 2, 1000L),
                 new OrderItem(2L, 1, 2000L)

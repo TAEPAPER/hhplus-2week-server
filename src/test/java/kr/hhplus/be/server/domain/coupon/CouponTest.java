@@ -9,8 +9,16 @@ class CouponTest {
     @Test
     void isIssueAvailable_Success() {
         // Given
-        CouponPolicy couponPolicy = new FixedAmountDiscountPolicy(1000);
-        Coupon coupon = new Coupon(1L, "Test Coupon", 1000, 10, couponPolicy);
+        CouponPolicy couponPolicy = new FixedAmountDiscountPolicy();
+        Coupon coupon = Coupon.builder()
+                                .id(1L)
+                                .name("Test Coupon")
+                                .discountAmount(1000)
+                                .totalQuantity(5)
+                                .validUnit("days")
+                                .validValue(30)
+                                .type("FIXED")
+                                .build();
 
         // When & Then
         assertDoesNotThrow(() -> coupon.isIssueAvailable(5));
@@ -19,8 +27,16 @@ class CouponTest {
     @Test
     void isIssueAvailable_ExceedsQuantity() {
         // Given
-        CouponPolicy couponPolicy = new FixedAmountDiscountPolicy(1000);
-        Coupon coupon = new Coupon(1L, "Test Coupon", 1000, 5, couponPolicy);
+        CouponPolicy couponPolicy = new FixedAmountDiscountPolicy();
+        Coupon coupon = Coupon.builder()
+                                .id(1L)
+                                .name("Test Coupon")
+                                .discountAmount(1000)
+                                .totalQuantity(5)
+                                .validUnit("days")
+                                .validValue(30)
+                                .type("FIXED")
+                                .build();
 
         // When & Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> coupon.isIssueAvailable(5));
