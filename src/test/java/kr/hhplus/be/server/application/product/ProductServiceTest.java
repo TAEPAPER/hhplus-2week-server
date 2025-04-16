@@ -61,19 +61,16 @@ class ProductServiceTest {
     @Test
     void getProductsStock_호출시_재고정보를_반환한다() {
         // given
-        Map<Long, Integer> productQuantities = Map.of(1L, 10, 2L, 5);
-        Product product1 = mock(Product.class);
-        Product product2 = mock(Product.class);
-        when(productRepository.findById(1L)).thenReturn(product1);
-        when(productRepository.findById(2L)).thenReturn(product2);
+        Product product = mock(Product.class);
+        Map<Product, Integer> productQuantities = Map.of(product, 10);
+        Order.ProductQuantity productQuantity = new Order.ProductQuantity(product, 10);
+        List<Order.ProductQuantity> expected = List.of(productQuantity);
 
         // when
         List<Order.ProductQuantity> result = productService.getProductsStock(productQuantities);
 
         // then
-        assertThat(result).hasSize(2);
-        verify(productRepository, times(1)).findById(1L);
-        verify(productRepository, times(1)).findById(2L);
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test

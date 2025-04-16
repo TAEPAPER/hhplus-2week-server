@@ -47,7 +47,7 @@ class OrderFacadeTest {
     void 쿠폰이_있는_주문_생성_성공() {
         // given
         long userId = 1L;
-        long couponId = 1L;
+        long couponId = 2L;
         User user = User.builder().id(userId).name("Test User").build();
         Map<Long, Integer> productQuantities = Map.of(1L, 2, 2L, 1);
 
@@ -70,6 +70,9 @@ class OrderFacadeTest {
         verify(productService, times(1)).getProductsStock(productQuantities);
         verify(couponService, times(1)).getById(couponId);
         verify(orderService, times(1)).placeOrder(eq(user), eq(quantities), eq(coupon));
+
+
+
     }
 
     @Test
