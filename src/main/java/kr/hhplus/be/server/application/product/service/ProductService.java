@@ -24,12 +24,10 @@ public class ProductService {
     }
 
 
-    public List<Order.ProductQuantity> getProductsStock(Map<Long, Integer> productQuantities) {
+    public List<Order.ProductQuantity> getProductsStock(Map<Product, Integer> productQuantities) {
         return productQuantities.entrySet().stream()
-                .map(entry -> new Order.ProductQuantity(
-                        productRepository.findById(entry.getKey()),
-                        entry.getValue()
-                )).toList();
+                .map(entry -> new Order.ProductQuantity(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     // ProductService에 재고 확인 로직 추가

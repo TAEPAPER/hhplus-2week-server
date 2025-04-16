@@ -30,7 +30,7 @@ public class PaymentFacade {
 
         //재고 조회
         List<Order.ProductQuantity> productQuantities = productService.getProductsStock(order.getOrderItems().stream()
-                .collect(Collectors.toMap(OrderItem::getProductId, OrderItem::getQuantity)));
+                .collect(Collectors.toMap(OrderItem::getProduct, OrderItem::getQuantity)));
         //재고 확인
         productService.validateStockAvailability(productQuantities);
 

@@ -7,6 +7,7 @@ import kr.hhplus.be.server.application.user.service.UserService;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
 import kr.hhplus.be.server.domain.order.Order;
+import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +23,7 @@ public class OrderFacade {
     private final UserService UserService;;
 
 
-    public Order order (long userId, Map<Long, Integer> productQuantities, long couponId) {
+    public Order order (long userId, Map<Product, Integer> productQuantities, long couponId) {
         //사용자 정보 조회
         User user = UserService.getUserById(userId);
         //물품별 현재 재고 조회
