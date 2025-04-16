@@ -1,18 +1,35 @@
 package kr.hhplus.be.server.domain.order;
 
+import jakarta.persistence.*;
+import kr.hhplus.be.server.domain.product.Product;
+import lombok.NoArgsConstructor;
+
+@Entity
+@NoArgsConstructor
 public class OrderItem {
-    private long productId;
+
+    @Id
+    @SequenceGenerator(name = "order_item_seq_gen", sequenceName = "order_item_seq", allocationSize = 1)
+    private long id;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column
     private int quantity;
+
+    @Column(name="unit_price")
     private long unitPrice;
 
-    public OrderItem(long productId, int quantity, long unitPrice) {
-        this.productId = productId;
+    public OrderItem(Product product, int quantity, long unitPrice) {
+        this.product = product;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public int getQuantity() {

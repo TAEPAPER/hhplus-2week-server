@@ -82,7 +82,11 @@ public class Order {
 
             long unitPrice = product.getPrice() * quantity;
             totalPrice += unitPrice;
-            orderItems.add(new OrderItem(product.getId(), quantity, unitPrice));
+
+            //재고 차감
+            product.deduct(quantity);
+
+            orderItems.add(new OrderItem(product, quantity, unitPrice));
         }
 
         // 쿠폰 적용
