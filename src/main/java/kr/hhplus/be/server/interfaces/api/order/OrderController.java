@@ -2,6 +2,7 @@ package kr.hhplus.be.server.interfaces.api.order;
 
 import kr.hhplus.be.server.application.order.OrderFacade;
 import kr.hhplus.be.server.domain.order.Order;
+import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.interfaces.api.order.dto.OrderItemRequest;
 import kr.hhplus.be.server.interfaces.api.order.dto.OrderRequest;
 import kr.hhplus.be.server.interfaces.api.order.dto.OrderResponse;
@@ -27,7 +28,11 @@ public class OrderController implements OrderApi{
         Map<Long, Integer> productQuantities = request.getOrderItems().stream()
                 .collect(Collectors.toMap(OrderItemRequest::getProductId, OrderItemRequest::getQuantity));
 
-        Order order = orderFacade.order(request.getUserId(), productQuantities, request.getCouponId());
+        Order order = orderFacade.order(
+                request.getUserId(),
+                productQuantities,
+                request.getCouponId()
+        );
 
         return ResponseEntity.ok(new OrderResponse(order));
     }

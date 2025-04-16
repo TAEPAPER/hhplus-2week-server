@@ -23,9 +23,10 @@ public class OrderFacade {
     private final UserService UserService;;
 
 
-    public Order order (long userId, Map<Product, Integer> productQuantities, long couponId) {
+    public Order order (long userId, Map<Long, Integer> productQuantities, long couponId) {
         //사용자 정보 조회
         User user = UserService.getUserById(userId);
+
         //물품별 현재 재고 조회
         List<Order.ProductQuantity> quantities = productService.getProductsStock(productQuantities);
 

@@ -24,9 +24,14 @@ public class ProductService {
     }
 
 
-    public List<Order.ProductQuantity> getProductsStock(Map<Product, Integer> productQuantities) {
+    public List<Order.ProductQuantity> getProductsStock(Map<Long, Integer> productQuantities) {
         return productQuantities.entrySet().stream()
-                .map(entry -> new Order.ProductQuantity(entry.getKey(), entry.getValue()))
+                .map(entry -> {
+                    long productId = entry.getKey();
+                    int quantity = entry.getValue();
+                    Product product = productRepository.findById(productId);
+                    return new Order.ProductQuantity(product, quantity);
+                })
                 .toList();
     }
 
