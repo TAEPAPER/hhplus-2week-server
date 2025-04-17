@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.interfaces.api.product.dto;
 
 import kr.hhplus.be.server.domain.product.Product;
+import lombok.Getter;
 
+@Getter
 public class ProductResponse {
 
     private final long id;

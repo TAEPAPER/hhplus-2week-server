@@ -2,7 +2,9 @@ package kr.hhplus.be.server.interfaces.api.order.dto;
 
 
 import kr.hhplus.be.server.domain.order.Order;
+import lombok.Getter;
 
+@Getter
 public class OrderResponse {
 
     private long orderId;

@@ -10,20 +10,19 @@ import lombok.Getter;
 public class Point {
 
     @Id
-    private Long userId;
+    private Long id;
 
     @Getter
     private long balance;
 
     @Getter
-    @MapsId
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Point(Long userId, User user, long balance) {
-        this.userId = userId;
+    public Point(Long id, User user, long balance) {
+        this.id = id;
         this.user = user;
         this.balance = balance;
     }
@@ -39,7 +38,7 @@ public class Point {
         long totalAmount = this.balance + amount;
 
         return Point.builder()
-                .userId(this.userId)
+                .id(this.id)
                 .user(this.user)
                 .balance(totalAmount)
                 .build();
@@ -57,7 +56,7 @@ public class Point {
         }
 
         return Point.builder()
-                .userId(this.userId)
+                .id(this.id)
                 .user(this.user)
                 .balance(totalAmount)
                 .build();

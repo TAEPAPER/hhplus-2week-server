@@ -6,6 +6,7 @@ import kr.hhplus.be.server.domain.order.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -27,6 +28,7 @@ public class Payment {
     private PaymentStatus status;
 
     @Column(name = "paid_at")
+    @CreationTimestamp
     private LocalDateTime paidAt;
 
     @Builder

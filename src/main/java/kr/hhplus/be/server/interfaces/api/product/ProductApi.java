@@ -17,4 +17,7 @@ public interface ProductApi {
 
     @Operation(summary = "전체 상품 조회")
     ResponseEntity<List<ProductResponse>> getAll();
+
+    @Operation(summary = "인기 상품 조회")
+    ResponseEntity<List<ProductResponse>> getPopular();
 }

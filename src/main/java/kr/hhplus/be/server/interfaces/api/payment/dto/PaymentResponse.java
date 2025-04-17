@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.interfaces.api.payment.dto;
 
 import kr.hhplus.be.server.domain.payment.Payment;
+import lombok.Getter;
 
+@Getter
 public class PaymentResponse {
 
     private Long paymentId;

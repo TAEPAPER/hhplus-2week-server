@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,7 @@ public class IssuedCoupon {
     @Column(name = "is_used", nullable = false)
     private boolean isUsed;
 
+    @CreationTimestamp
     @Column(name = "issued_at", nullable = false)
     private LocalDateTime issuedAt;
 

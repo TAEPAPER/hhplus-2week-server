@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.interfaces.api.product;
 
+import jakarta.persistence.Id;
 import kr.hhplus.be.server.application.product.service.ProductService;
 import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.product.TopSellingProduct;
 import kr.hhplus.be.server.interfaces.api.product.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +32,19 @@ public class ProductController implements ProductApi {
         return ResponseEntity.ok(
                 products.stream().map(ProductResponse::new).toList()
         );
+    }
+
+    //인기상품 조회
+    @Override
+    @GetMapping("/popular")
+    public ResponseEntity<List<ProductResponse>> getPopular() {
+        List<TopSellingProduct> topSellingProducts = productService.getPopularProducts();
+        return ResponseEntity.ok(
+                topSellingProducts.stream().filter(top -> top.getProduct() != null)
+                        .map(product -> new ProductResponse(product.getProduct()))
+                        .toList()
+
+        );
+
     }
 }

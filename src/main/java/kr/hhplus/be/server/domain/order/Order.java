@@ -6,6 +6,7 @@ import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -45,6 +46,7 @@ public class Order {
     private IssuedCoupon coupon;
 
     @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Builder

@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,7 @@ public class Inventory {
     private int stock;
 
     @Column(name = "updated_at", nullable = false)
+    @CreationTimestamp
     private LocalDateTime updatedAt;
 
     public Inventory(Product product, int stock) {
@@ -48,4 +50,6 @@ public class Inventory {
         this.stock += quantity;
         this.updatedAt = LocalDateTime.now();
     }
+
+
 }

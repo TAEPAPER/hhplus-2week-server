@@ -55,6 +55,10 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok:1.18.30")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 
+	testImplementation("org.instancio:instancio-core:2.0.0")
+	testImplementation("org.instancio:instancio-junit:2.0.0")  // JUnit 5 연동 시
+
+
 }
 
 tasks.withType<Test> {
