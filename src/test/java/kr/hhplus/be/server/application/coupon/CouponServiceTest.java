@@ -54,7 +54,7 @@ class CouponServiceTest {
                                 .build();
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(couponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(false);
+        when(couponRepository.existsById(userId, couponId)).thenReturn(false);
         when(couponRepository.findById(couponId)).thenReturn(Optional.of(coupon));
         when(couponRepository.countByCouponId(couponId)).thenReturn(0);
         when(issuedCouponRepository.save(any(IssuedCoupon.class))).thenReturn(issuedCoupon);
@@ -72,8 +72,8 @@ class CouponServiceTest {
         long userId = 1L;
         long couponId = 1L;
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
-        when(couponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(true);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User("test")));
+        when(couponRepository.existsById(userId, couponId)).thenReturn(true);
 
         // When & Then
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> couponService.issueCoupon(userId, couponId));
@@ -86,7 +86,7 @@ class CouponServiceTest {
         long userId = 1L;
         long couponId = 1L;
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User("test")));
         when(couponRepository.findById(couponId)).thenReturn(Optional.empty());
 
         // When & Then
@@ -101,8 +101,8 @@ class CouponServiceTest {
         long couponId = 1L;
         Coupon coupon = mock(Coupon.class);
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
-        when(couponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(false);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User("test")));
+        when(couponRepository.existsById(userId, couponId)).thenReturn(false);
         when(couponRepository.findById(couponId)).thenReturn(Optional.of(coupon));
         when(couponRepository.countByCouponId(couponId)).thenReturn(5);
         doThrow(new IllegalArgumentException("쿠폰 발급 수량이 초과되었습니다.")).when(coupon).isIssueAvailable(5);
