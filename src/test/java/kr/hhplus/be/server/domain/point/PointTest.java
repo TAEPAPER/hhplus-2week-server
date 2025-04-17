@@ -12,7 +12,7 @@ class PointTest {
         // given
         User user = User.builder().id(1L).name("test").build();
         Point point = Point.builder()
-                            .userId(1L)
+                            .id(1L)
                             .user(user)
                             .balance(1000L)
                             .build();
@@ -30,7 +30,7 @@ class PointTest {
         // given
         User user = User.builder().id(1L).name("test").build();
         Point point = Point.builder()
-                            .userId(1L)
+                            .id(1L)
                             .user(user)
                             .balance(1000L)
                             .build();
@@ -48,7 +48,7 @@ class PointTest {
         // given
         User user = User.builder().id(1L).name("test").build();
         Point point = Point.builder()
-                            .userId(1L)
+                            .id(1L)
                             .user(user)
                             .balance(1000L)
                             .build();
@@ -66,7 +66,7 @@ class PointTest {
         // given
         User user = User.builder().id(1L).build();
         Point point = Point.builder()
-                            .userId(1L)
+                            .id(1L)
                             .user(user)
                             .balance(1000L)
                             .build();
@@ -84,7 +84,7 @@ class PointTest {
         // given
         User user = User.builder().id(1L).name("test").build();
         Point point = Point.builder()
-                            .userId(1L)
+                            .id(1L)
                             .user(user)
                             .balance(1000L)
                             .build();
@@ -102,7 +102,7 @@ class PointTest {
         // given
         User user = User.builder().id(1L).name("test").build();
         Point point = Point.builder()
-                            .userId(1L)
+                            .id(1L)
                             .user(user)
                             .balance(1000L)
                             .build();
@@ -120,7 +120,7 @@ class PointTest {
         // given
         User user = User.builder().id(1L).name("test").build();
         Point point = Point.builder()
-                            .userId(1L)
+                            .id(1L)
                             .user(user)
                             .balance(1000L)
                             .build();

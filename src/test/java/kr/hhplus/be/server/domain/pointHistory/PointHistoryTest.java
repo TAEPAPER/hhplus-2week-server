@@ -18,7 +18,7 @@ class PointHistoryTest {
                         .name("test")
                         .build();
         Point point = Point.builder()
-                        .userId(1L)
+                        .id(1L)
                         .user(user)
                         .balance(1000L)
                         .build();
@@ -40,7 +40,7 @@ class PointHistoryTest {
                 .name("test")
                 .build();
         Point point = Point.builder()
-                .userId(1L)
+                .id(1L)
                 .user(user)
                 .balance(1000L)
                 .build();

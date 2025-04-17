@@ -45,7 +45,7 @@ class PointFacadeTest {
         TestClockHolder testClockHolder = new TestClockHolder(1234567890);
 
         Point point = Point.builder()
-                .userId(userId)
+                .id(userId)
                 .user(user)
                 .balance(1000L)
                 .build();

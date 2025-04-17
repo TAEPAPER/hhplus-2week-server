@@ -45,7 +45,7 @@ class PointHistoryServiceTest {
         long amount = 2000L;
 
         User user = User.builder().id(userId).name("test").build();
-        Point point = Point.builder().userId(userId).user(user).balance(3000).build();
+        Point point = Point.builder().id(userId).user(user).balance(3000).build();
 
         when(pointRepository.findById(userId)).thenReturn(java.util.Optional.of(point));
 
@@ -70,7 +70,7 @@ class PointHistoryServiceTest {
         long amount = 1000L;
 
         User user = User.builder().id(userId).name("test").build();
-        Point point = Point.builder().userId(userId).user(user).balance(3000).build();
+        Point point = Point.builder().id(userId).user(user).balance(3000).build();
 
         when(pointRepository.findById(userId)).thenReturn(java.util.Optional.of(point));
 
