@@ -18,8 +18,7 @@ public class Product {
     @Column(length = 50, nullable = false)
     private  long price;
 
-    @OneToOne
-    @JoinColumn(name = "inventory_id", nullable = false)
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private  Inventory inventory;
 
     @Column(length = 200, nullable = false)
