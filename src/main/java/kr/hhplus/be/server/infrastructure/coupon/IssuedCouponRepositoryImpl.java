@@ -22,4 +22,11 @@ public class IssuedCouponRepositoryImpl implements IssuedCouponRepository {
     public IssuedCoupon save(IssuedCoupon issuedCoupon) {
         return issuedCouponRepository.save(issuedCoupon);
     }
+
+    @Override
+    public int countByCouponId(Long couponId) {
+        return issuedCouponRepository.countByCouponId(couponId);
+    }
+
+
 }

@@ -19,5 +19,7 @@ public class OrderRequest {
         this.orderItems = orderItems;
         this.couponId = couponId;
     }
+
+
 }
 
