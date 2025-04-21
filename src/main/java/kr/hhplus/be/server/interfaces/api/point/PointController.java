@@ -23,5 +23,4 @@ public class PointController implements PointApi {
                 pointFacade.charge(request.getUserId(), request.getAmount()).toDto()
         );
     }
-
 }

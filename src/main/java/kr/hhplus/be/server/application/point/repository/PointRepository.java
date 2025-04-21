@@ -10,5 +10,7 @@ public interface PointRepository {
 
     Point save(Point point);
 
-    Optional<Object> findByUserId(long userId);
+    void deleteAll();
+
+    Optional<Point> findByUserId(long userId);
 }

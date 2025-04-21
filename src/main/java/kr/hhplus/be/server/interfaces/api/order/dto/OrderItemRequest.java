@@ -1,9 +1,13 @@
 package kr.hhplus.be.server.interfaces.api.order.dto;
 
+import lombok.Getter;
 
+@Getter
 public class OrderItemRequest {
     private long productId;
     private int quantity;
+
+    public OrderItemRequest() {}
 
     public OrderItemRequest(long productId, int quantity) {
         this.productId = productId;

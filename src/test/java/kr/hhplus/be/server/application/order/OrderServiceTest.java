@@ -5,6 +5,7 @@ import kr.hhplus.be.server.application.order.service.OrderService;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -34,6 +35,7 @@ class OrderServiceTest {
     void 주문_생성_성공() {
         // Given
         long userId = 1L;
+        User user = mock(User.class);
         IssuedCoupon coupon = mock(IssuedCoupon.class);
         Product product1 = mock(Product.class);
         Product product2 = mock(Product.class);
@@ -46,7 +48,7 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
 
         // When
-        Order result = orderService.placeOrder(userId, quantities, coupon);
+        Order result = orderService.placeOrder(user, quantities, coupon);
 
         // Then
         assertNotNull(result);

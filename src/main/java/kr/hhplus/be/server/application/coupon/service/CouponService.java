@@ -1,13 +1,18 @@
 package kr.hhplus.be.server.application.coupon.service;
 
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
+import kr.hhplus.be.server.application.user.repository.UserRepository;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
+import kr.hhplus.be.server.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
+
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,6 +23,8 @@ public class CouponService {
 
     private final IssuedCouponRepository issuedCouponRepository;
     private final CouponRepository couponRepository;
+    private final UserRepository userRepository;
+
     // 쿠폰 ID별 Lock 보관소
     private final Map<Long, ReentrantLock> lockMap = new ConcurrentHashMap<>();
 
@@ -28,13 +35,18 @@ public class CouponService {
         return issuedCouponRepository.findById(couponId);
     }
 
+    @Transactional
     public void issueCoupon(long userId, long couponId) {
+        //유저 정보 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+
         // 쿠폰별 락 가져오기
         ReentrantLock lock = lockMap.computeIfAbsent(couponId, id -> new ReentrantLock());
         lock.lock();
         try {
             // 2. 이미 발급받았는지 확인
-            if (couponRepository.existsByUserIdAndCouponId(userId, couponId)) {
+            if (couponRepository.existsById(userId, couponId)) {
                 throw new IllegalStateException("이미 발급받은 쿠폰입니다.");
             }
 
@@ -47,9 +59,13 @@ public class CouponService {
            coupon.isIssueAvailable(issuedCount);
 
             // 4. 발급
-            IssuedCoupon issuedCoupon = new IssuedCoupon(userId, couponId, coupon.getCouponPolicy(),false,false);
+            IssuedCoupon issuedCoupon = IssuedCoupon.builder().user(user)
+                                    .coupon(coupon)
+                                    .issuedAt(LocalDateTime.now())
+                                    .build();
+
             issuedCouponRepository.save(issuedCoupon);
-            // 5. 발급 이력 저장
+
         } finally {
             lock.unlock(); // 💡 꼭 풀어줘야 해!
         }

@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.order;
 
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -31,6 +32,9 @@ class OrderTest {
         long productPrice = 5000L;
         long discount = 2000L;
 
+        User user = User.builder().id(userId).name("Test User").build();
+
+
         when(product.getId()).thenReturn(1L);
         when(product.getPrice()).thenReturn(productPrice);
         doNothing().when(product).isStockAvailable(quantity);
@@ -41,10 +45,10 @@ class OrderTest {
         List<Order.ProductQuantity> productQuantities = List.of(new Order.ProductQuantity(product, quantity));
 
         // when
-        Order order = Order.create(userId, productQuantities, coupon);
+        Order order = Order.create(user, productQuantities, coupon);
 
         // then
-        assertThat(order.getUserId()).isEqualTo(userId);
+        assertThat(order.getUser().getId()).isEqualTo(userId);
         assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.CREATED);
         assertThat(order.getTotalPrice()).isEqualTo((productPrice * quantity) - discount);
         assertThat(order.getOrderItems()).hasSize(1);
@@ -60,13 +64,14 @@ class OrderTest {
         MockitoAnnotations.openMocks(this);
         long userId = 1L;
         int quantity = 2;
+        User user = User.builder().id(userId).name("Test User").build();
 
         doThrow(new IllegalStateException("상품 재고 부족")).when(product).isStockAvailable(quantity);
 
         List<Order.ProductQuantity> productQuantities = List.of(new Order.ProductQuantity(product, quantity));
 
         // when & then
-        assertThatThrownBy(() -> Order.create(userId, productQuantities, coupon))
+        assertThatThrownBy(() -> Order.create(user, productQuantities, coupon))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("상품 재고 부족");
 
@@ -82,6 +87,7 @@ class OrderTest {
         long userId = 1L;
         int quantity = 1;
         long productPrice = 10000L;
+        User user = User.builder().id(userId).name("Test User").build();
 
         when(product.getId()).thenReturn(1L);
         when(product.getPrice()).thenReturn(productPrice);
@@ -92,7 +98,7 @@ class OrderTest {
         List<Order.ProductQuantity> productQuantities = List.of(new Order.ProductQuantity(product, quantity));
 
         // when
-        Order order = Order.create(userId, productQuantities, coupon);
+        Order order = Order.create(user, productQuantities, coupon);
 
         // then
         assertThat(order.getTotalPrice()).isEqualTo(productPrice * quantity);

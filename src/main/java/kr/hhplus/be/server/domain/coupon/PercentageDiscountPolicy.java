@@ -1,14 +1,12 @@
 package kr.hhplus.be.server.domain.coupon;
 
-public class PercentageDiscountPolicy implements CouponPolicy {
-    private final long percentage;
+import org.springframework.stereotype.Component;
 
-    public PercentageDiscountPolicy(long percentage) {
-        this.percentage = percentage;
-    }
+@Component("PERCENTAGE")
+public class PercentageDiscountPolicy implements CouponPolicy {
 
     @Override
-    public long applyDiscount(long totalAmount) {
+    public long applyDiscount(long totalAmount, int percentage) {
         return totalAmount - (totalAmount * percentage / 100);
     }
 }

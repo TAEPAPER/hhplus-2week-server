@@ -1,27 +1,62 @@
 package kr.hhplus.be.server.domain.coupon;
 
 
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Entity
+@NoArgsConstructor
+@Getter
 public class Coupon {
 
-    private final Long couponId;
-    private final int discountAmount;
-    private final int totalQuantity;
-    private final CouponPolicy couponPolicy;
+    @Id
+    private Long id;
 
-    public Coupon(Long couponId, String name, int discountAmount, int totalQuantity, CouponPolicy couponPolicy) {
-        this.couponId = couponId;
+    @Column
+    private String name;
+
+    @Column(name="discount_amount")
+    private int discountAmount;
+
+    @Column(name="total_quantity")
+    private int totalQuantity;
+
+    @Column(name="valid_value")
+    private int validValue;
+
+    @Column(name="valid_unit")
+    private String validUnit;
+
+    @Column
+    private String type;
+
+    @Transient
+    private  CouponPolicy couponPolicy;
+
+    @PostLoad
+    private void postLoad() {
+        this.couponPolicy = CouponPolicyResolver.resolve(this.type);
+    }
+
+    @Builder
+    public Coupon(Long id, String name, int discountAmount, int totalQuantity, int validValue, String validUnit, String type) {
+        this.id = id;
+        this.name = name;
         this.discountAmount = discountAmount;
         this.totalQuantity = totalQuantity;
-        this.couponPolicy = couponPolicy;
+        this.validValue = validValue;
+        this.validUnit = validUnit;
+        this.type = type;
     }
 
-    public int getTotalQuantity() {
-        return totalQuantity;
-    }
 
-    public CouponPolicy getCouponPolicy() {
-        return couponPolicy;
+    public long applyDiscount(long totalAmount) {
+        if (couponPolicy == null) {
+            throw new IllegalStateException("CouponPolicy 미주입 상태입니다.");
+        }
+        return couponPolicy.applyDiscount(totalAmount, this.discountAmount);
     }
 
     public void isIssueAvailable(int issuedCount) {

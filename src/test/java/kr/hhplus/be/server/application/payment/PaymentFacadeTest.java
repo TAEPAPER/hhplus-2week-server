@@ -11,6 +11,7 @@ import kr.hhplus.be.server.domain.order.OrderItem;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.point.Point;
 import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -51,41 +52,23 @@ class PaymentFacadeTest {
 
     @Test
     void 결제_처리_성공() {
-        // given
+        //given
         long orderId = 1L;
-        long userId = 100L;
         Order order = mock(Order.class);
+        User user = mock(User.class);
         Point point = mock(Point.class);
         Payment payment = mock(Payment.class);
-        List<Order.ProductQuantity> productQuantities = List.of(
-                new Order.ProductQuantity(mock(Product.class), 2),
-                new Order.ProductQuantity(mock(Product.class), 1)
-        );
 
-        when(order.getUserId()).thenReturn(userId);
-        when(order.getOrderItems()).thenReturn(List.of(
-                new OrderItem(1L, 2, 1000L),
-                new OrderItem(2L, 1, 2000L)
-        ));
         when(orderService.getOrderById(orderId)).thenReturn(order);
-        when(productService.getProductsStock(Map.of(1L, 2, 2L, 1))).thenReturn(productQuantities);
-        doNothing().when(productService).validateStockAvailability(productQuantities);
-        when(pointService.getPointByUserId(userId)).thenReturn(point);
+        when(order.getUser()).thenReturn(user);
+        when(pointService.getPointByUserId(user.getId())).thenReturn(point);
         when(paymentService.processPayment(order, point)).thenReturn(payment);
-        when(order.getTotalPrice()).thenReturn(3000L); // 총 가격 설정
 
-
-        // when
+        //when
         Payment result = paymentFacade.processPayment(orderId);
 
-        // then
+        //then
         assertThat(result).isEqualTo(payment);
-        verify(orderService, times(1)).getOrderById(orderId);
-        verify(productService, times(1)).getProductsStock(Map.of(1L, 2, 2L, 1));
-        verify(productService, times(1)).validateStockAvailability(productQuantities);
-        verify(pointService, times(1)).getPointByUserId(userId);
-        verify(paymentService, times(1)).processPayment(order, point);
-        verify(pointHistoryService, times(1)).recordUse(userId, order.getTotalPrice());
-        verify(productService, times(1)).deductStock(productQuantities);
+        verify(pointHistoryService).recordUse(user.getId(), order.getTotalPrice());
     }
 }

@@ -38,6 +38,7 @@ class PaymentServiceTest {
             // Given
             Order order = mock(Order.class);
             Point point = mock(Point.class);
+
             Payment payment = mock(Payment.class);
 
             when(order.getTotalPrice()).thenReturn(1000L);
@@ -51,7 +52,7 @@ class PaymentServiceTest {
             assertNotNull(result);
             verify(point).use(1000L);
             verify(pointRepository).save(point);
-            verify(payment).pay(order);
+            verify(payment).pay();
             verify(paymentRepository).save(payment);
         }
     }

@@ -1,31 +1,55 @@
 package kr.hhplus.be.server.domain.pointHistory;
 
+import jakarta.persistence.Entity;
 import kr.hhplus.be.server.application.common.ClockHolder;
+import kr.hhplus.be.server.domain.point.Point;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
+
+@Entity
+@NoArgsConstructor
 @EqualsAndHashCode
 public class PointHistory {
 
-    private long userId;
-    private long amount;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "point_id", nullable = false)
+    private Point point;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10, nullable = false)
     private TransactionType type;
-    private long updateMillis;
 
-    public PointHistory(long userId, long amount, TransactionType type, long updateMillis) {
-        this.userId = userId;
-        this. amount = amount;
+    @Column(precision = 10, scale = 2, nullable = false)
+    private long amount;
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Builder
+    public PointHistory(Point point, long amount, TransactionType type) {
+        this.point = point;
+        this.amount = amount;
         this.type = type;
-        this.updateMillis = updateMillis;
     }
 
-    //충전 이력 생성
-    public static PointHistory createChargeHistory(long userId, long amount, ClockHolder clockHolder) {
-        return new PointHistory(userId, amount, TransactionType.CHARGE, clockHolder.millis());
+    public static PointHistory createChargeHistory(Point point, long amount) {
+        return new PointHistory(point, amount, TransactionType.CHARGE);
     }
 
-    //사용 이력 생성
-    public static PointHistory createUseHistory(long userId, long amount,ClockHolder clockHolder ) {
-        return new PointHistory(userId, amount, TransactionType.USE, clockHolder.millis());
+    public static PointHistory createUseHistory(Point point, long amount) {
+        return new PointHistory(point, amount, TransactionType.USE);
     }
 
 }

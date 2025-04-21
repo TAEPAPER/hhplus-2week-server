@@ -1,8 +1,10 @@
 package kr.hhplus.be.server.application.product.service;
 
 import kr.hhplus.be.server.application.product.repository.ProductRepository;
+import kr.hhplus.be.server.application.product.repository.TopSellingProductRepository;
 import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.product.TopSellingProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.Map;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final TopSellingProductRepository topSellingProductRepository;
 
     public Product getById(long id) {
         return productRepository.findById(id);
@@ -26,10 +29,13 @@ public class ProductService {
 
     public List<Order.ProductQuantity> getProductsStock(Map<Long, Integer> productQuantities) {
         return productQuantities.entrySet().stream()
-                .map(entry -> new Order.ProductQuantity(
-                        productRepository.findById(entry.getKey()),
-                        entry.getValue()
-                )).toList();
+                .map(entry -> {
+                    long productId = entry.getKey();
+                    int quantity = entry.getValue();
+                    Product product = productRepository.findById(productId);
+                    return new Order.ProductQuantity(product, quantity);
+                })
+                .toList();
     }
 
     // ProductService에 재고 확인 로직 추가
@@ -48,5 +54,9 @@ public class ProductService {
             product.deduct(quantity);
             productRepository.save(product);
         }
+    }
+
+    public List<TopSellingProduct> getPopularProducts() {
+        return topSellingProductRepository.findAll();
     }
 }

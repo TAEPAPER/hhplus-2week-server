@@ -1,29 +1,60 @@
 package kr.hhplus.be.server.domain.order;
 
+import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.domain.user.User;
+import lombok.Builder;
+import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Entity
+@Getter
+@Table(name = "orders")
 public class Order {
+    // 기본 생성자 추가
+    protected Order() {
+    }
 
-    private long orderId;
-    private long userId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @Getter
+    private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10, nullable = false)
     private OrderStatus orderStatus;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
+
+    @Column(nullable = false)
     private long totalPrice;
 
-    public Order( long userId, List<OrderItem> items, OrderStatus orderStatus, long totalPrice) {
-        this.userId = userId;
+    @OneToOne
+    @JoinColumn(name = "issued_coupon_id")
+    private IssuedCoupon coupon;
+
+    @CreatedDate
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Builder
+    public Order( User user, List<OrderItem> items, OrderStatus orderStatus, long totalPrice) {
+        this.user = user;
         this.orderStatus = orderStatus;
         this.items = items;
         this.totalPrice = totalPrice;
-    }
-
-    public long getUserId() {
-        return userId;
     }
 
     public OrderStatus getOrderStatus() {
@@ -39,16 +70,11 @@ public class Order {
     }
 
 
-    public long getOrderId() {
-        return orderId;
-    }
-
-
     public List<OrderItem> getOrderItems() {
         return items;
     }
 
-    public static Order create(long userId, List<ProductQuantity> productQuantities, IssuedCoupon coupon) {
+    public static Order create(User user, List<ProductQuantity> productQuantities, IssuedCoupon coupon) {
 
         List<OrderItem> orderItems = new ArrayList<>();
         long totalPrice = 0;
@@ -62,7 +88,11 @@ public class Order {
 
             long unitPrice = product.getPrice() * quantity;
             totalPrice += unitPrice;
-            orderItems.add(new OrderItem(product.getId(), quantity, unitPrice));
+
+            //재고 차감
+            product.deduct(quantity);
+
+            orderItems.add(new OrderItem(product, quantity, unitPrice));
         }
 
         // 쿠폰 적용
@@ -71,7 +101,7 @@ public class Order {
             totalPrice = Math.max(totalPrice, 0);
         }
 
-        return new Order(userId, orderItems, OrderStatus.CREATED ,totalPrice);
+        return new Order(user, orderItems, OrderStatus.CREATED ,totalPrice);
     }
 
     public record ProductQuantity(Product product, int quantity) {}

@@ -2,7 +2,9 @@ package kr.hhplus.be.server.interfaces.api.order.dto;
 
 
 import kr.hhplus.be.server.domain.order.Order;
+import lombok.Getter;
 
+@Getter
 public class OrderResponse {
 
     private long orderId;
@@ -10,8 +12,8 @@ public class OrderResponse {
     private String status;
 
     public OrderResponse(Order order) {
-        this.orderId = order.getOrderId();
-        this.userId = order.getUserId();
+        this.orderId = order.getId();
+        this.userId = order.getUser().getId();
         this.status = order.getOrderStatus().name();
     }
 

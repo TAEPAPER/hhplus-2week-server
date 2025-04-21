@@ -6,5 +6,5 @@ public interface IssuedCouponRepository {
 
     IssuedCoupon findById(Long couponId);
 
-    void save(IssuedCoupon issuedCoupon);
+    IssuedCoupon save(IssuedCoupon issuedCoupon);
 }
