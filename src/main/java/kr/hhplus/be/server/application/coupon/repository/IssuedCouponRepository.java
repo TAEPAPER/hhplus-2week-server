@@ -7,4 +7,6 @@ public interface IssuedCouponRepository {
     IssuedCoupon findById(Long couponId);
 
     IssuedCoupon save(IssuedCoupon issuedCoupon);
+
+    int countByCouponId(Long couponId);
 }
