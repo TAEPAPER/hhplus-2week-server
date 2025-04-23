@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class OrderControllerConcurrencyTest {
+class OrderConcurrencyTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -73,8 +73,11 @@ class OrderControllerConcurrencyTest {
         latch.await(); // 모든 스레드가 작업을 완료할 때까지 대기
         executorService.shutdown();
 
-        Product updatedProduct = productRepository.findById(productId);
-        int finalInventory = updatedProduct.getInventory().getStock();
+        //when
+        //주문 후 재고 확인
+        Product finalProduct = productRepository.findById(1L);
+
+       int finalInventory = finalProduct.getInventory().getStock();
         //then
         //재고 확인
         assertEquals(initialInventory - numberOfThreads, finalInventory);
