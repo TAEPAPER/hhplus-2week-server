@@ -74,9 +74,6 @@ public class Order {
             long unitPrice = product.getPrice() * quantity;
             totalPrice += unitPrice;
 
-            //재고 차감
-            product.deductStock(quantity);
-
             orderItems.add(new OrderItem(null,product, quantity, unitPrice));
         }
 

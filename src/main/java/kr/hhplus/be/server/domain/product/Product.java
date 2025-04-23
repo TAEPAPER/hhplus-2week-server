@@ -48,4 +48,5 @@ public class Product {
         this.inventory.deduct(quantity);
     }
 
+
 }

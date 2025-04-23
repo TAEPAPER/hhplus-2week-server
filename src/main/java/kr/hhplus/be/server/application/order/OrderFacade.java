@@ -33,6 +33,9 @@ public class OrderFacade {
         //물품별 현재 재고 조회
         List<Order.ProductQuantity> quantities = productService.getProductsStock(orderPayment.getProducts());
 
+        //재고 차감
+        productService.deductStock(quantities);
+
         // 쿠폰 조회
         IssuedCoupon coupon = (orderPayment.getCouponId() > 0) ? couponService.getById(orderPayment.getCouponId()) : new NoCoupon();
 
@@ -41,6 +44,7 @@ public class OrderFacade {
 
         return order;
     }
+
 
 
 }

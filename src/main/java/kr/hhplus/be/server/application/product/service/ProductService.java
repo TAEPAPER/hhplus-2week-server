@@ -36,7 +36,9 @@ public class ProductService {
             long productId = orderProduct.getProductId();
 
             //상품 정보(재고 포함)
-            Product product = productRepository.findById(productId);
+            //Product product = productRepository.findById(productId);
+            Product product = productRepository.findByIdWithLock(productId)
+                    .orElseThrow(() -> new IllegalArgumentException("상품 정보가 없습니다!"));
             //주문 수량
             int orderQuantity = orderProduct.getQuantity();
 
