@@ -18,6 +18,7 @@ public class PointFacade {
     private final PointService pointService;
     private final PointHistoryService pointHistoryService;
     private final UserRepository userRepository;
+
     @Transactional
     public PointChargeResult charge(long userId, long amount) {
         User user = userRepository.findById(userId)

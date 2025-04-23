@@ -13,4 +13,6 @@ public interface PointRepository {
     void deleteAll();
 
     Optional<Point> findByUserId(long userId);
+
+    Optional<Point> findByIdWithLock(long id);
 }
