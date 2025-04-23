@@ -22,7 +22,7 @@ public class IssuedCoupon {
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "coupon_id", nullable = false)
     private Coupon coupon;
 

@@ -2,7 +2,6 @@ package kr.hhplus.be.server.interfaces.api.point;
 
 import kr.hhplus.be.server.application.point.PointFacade;
 import kr.hhplus.be.server.application.point.repository.PointRepository;
-import kr.hhplus.be.server.interfaces.api.point.dto.PointChargeRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

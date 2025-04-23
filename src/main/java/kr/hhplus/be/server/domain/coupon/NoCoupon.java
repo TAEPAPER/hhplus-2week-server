@@ -9,6 +9,6 @@ public class NoCoupon extends IssuedCoupon {
 
     @Override
     public boolean isValid() {
-        return true; // 항상 유효한 것으로 처리
+        return false; //항상 유효하지 않은 것으로 처리
     }
 }

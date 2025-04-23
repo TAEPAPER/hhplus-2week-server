@@ -37,7 +37,7 @@ class OrderTest {
 
         when(product.getId()).thenReturn(1L);
         when(product.getPrice()).thenReturn(productPrice);
-        doNothing().when(product).isStockAvailable(quantity);
+        doNothing().when(product).checkStockAvailability(quantity);
 
         when(coupon.isValid()).thenReturn(true);
         when(coupon.calculateDiscount(productPrice * quantity)).thenReturn(discount);
@@ -51,8 +51,8 @@ class OrderTest {
         assertThat(order.getUser().getId()).isEqualTo(userId);
         assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.CREATED);
         assertThat(order.getTotalPrice()).isEqualTo((productPrice * quantity) - discount);
-        assertThat(order.getOrderItems()).hasSize(1);
-        verify(product, times(1)).isStockAvailable(quantity);
+        assertThat(order.getItems()).hasSize(1);
+        verify(product, times(1)).checkStockAvailability(quantity);
         verify(coupon, times(1)).isValid();
         verify(coupon, times(1)).calculateDiscount(productPrice * quantity);
     }
@@ -66,7 +66,7 @@ class OrderTest {
         int quantity = 2;
         User user = User.builder().id(userId).name("Test User").build();
 
-        doThrow(new IllegalStateException("상품 재고 부족")).when(product).isStockAvailable(quantity);
+        doThrow(new IllegalStateException("상품 재고 부족")).when(product).checkStockAvailability(quantity);
 
         List<Order.ProductQuantity> productQuantities = List.of(new Order.ProductQuantity(product, quantity));
 
@@ -75,7 +75,7 @@ class OrderTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("상품 재고 부족");
 
-        verify(product, times(1)).isStockAvailable(quantity);
+        verify(product, times(1)).checkStockAvailability(quantity);
         verifyNoInteractions(coupon);
     }
 
@@ -91,7 +91,7 @@ class OrderTest {
 
         when(product.getId()).thenReturn(1L);
         when(product.getPrice()).thenReturn(productPrice);
-        doNothing().when(product).isStockAvailable(quantity);
+        doNothing().when(product).checkStockAvailability(quantity);
 
         when(coupon.isValid()).thenReturn(false);
 
@@ -102,7 +102,7 @@ class OrderTest {
 
         // then
         assertThat(order.getTotalPrice()).isEqualTo(productPrice * quantity);
-        verify(product, times(1)).isStockAvailable(quantity);
+        verify(product, times(1)).checkStockAvailability(quantity);
         verify(coupon, times(1)).isValid();
         verify(coupon, never()).calculateDiscount(anyLong());
     }

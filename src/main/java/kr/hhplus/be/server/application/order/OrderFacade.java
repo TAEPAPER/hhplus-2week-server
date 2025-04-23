@@ -26,15 +26,15 @@ public class OrderFacade {
     private final UserService UserService;;
 
     @Transactional
-    public Order order (long userId, Map<Long, Integer> productQuantities, long couponId) {
+    public Order order (OrderCriteria.OrderPayment orderPayment) {
         //사용자 정보 조회
-        User user = UserService.getUserById(userId);
+        User user = UserService.getUserById(orderPayment.getUserId());
 
         //물품별 현재 재고 조회
-        List<Order.ProductQuantity> quantities = productService.getProductsStock(productQuantities);
+        List<Order.ProductQuantity> quantities = productService.getProductsStock(orderPayment.getProducts());
 
         // 쿠폰 조회
-        IssuedCoupon coupon = (couponId > 0) ? couponService.getById(couponId) : new NoCoupon();
+        IssuedCoupon coupon = (orderPayment.getCouponId() > 0) ? couponService.getById(orderPayment.getCouponId()) : new NoCoupon();
 
         //주문 생성
         Order order = orderService.placeOrder(user, quantities, coupon);

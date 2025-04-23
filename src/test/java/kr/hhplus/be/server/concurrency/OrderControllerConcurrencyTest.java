@@ -2,8 +2,9 @@ package kr.hhplus.be.server.concurrency;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.hhplus.be.server.interfaces.api.order.dto.OrderItemRequest;
-import kr.hhplus.be.server.interfaces.api.order.dto.OrderRequest;
+import kr.hhplus.be.server.application.product.repository.ProductRepository;
+import kr.hhplus.be.server.domain.product.Product;
+import kr.hhplus.be.server.interfaces.order.OrderRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +16,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,23 +31,36 @@ class OrderControllerConcurrencyTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     @Test
-    void 동시_주문_결제_테스트() throws InterruptedException, JsonProcessingException {
-        int threadCount = 100;
-        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
-        CountDownLatch latch = new CountDownLatch(threadCount);
+    void 동시_주문_시_재고_테스트() throws InterruptedException, JsonProcessingException {
 
-        long userId = 1L;
-        List<OrderItemRequest> orderItems = List.of(new OrderItemRequest(1L, 2));
-        OrderRequest orderRequest = new OrderRequest(userId, orderItems, null);
-        String requestBody = objectMapper.writeValueAsString(orderRequest);
+        //given
+        int numberOfThreads = 2;
 
-        for (int i = 0; i < threadCount; i++) {
-            executorService.execute(() -> {
+        long productId = 1L;
+        Product product = productRepository.findById(1L);
+        int initialInventory = product.getInventory().getStock();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
+        CountDownLatch latch = new CountDownLatch(numberOfThreads);
+
+
+        for (int i = 0; i < numberOfThreads; i++) {
+            executorService.submit(() -> {
                 try {
+
+                    OrderRequest orderRequest = OrderRequest.of(1L,0L, List.of(
+                            new OrderRequest.OrderItemRequest(productId, 1)
+                    ));
+
+                    String json = objectMapper.writeValueAsString(orderRequest);
+
                     mockMvc.perform(post("/orders/order")
                                     .contentType("application/json")
-                                    .content(requestBody))
+                                    .content(json))
                             .andExpect(status().isOk());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -54,6 +70,13 @@ class OrderControllerConcurrencyTest {
             });
         }
 
-        latch.await();
+        latch.await(); // 모든 스레드가 작업을 완료할 때까지 대기
+        executorService.shutdown();
+
+        Product updatedProduct = productRepository.findById(productId);
+        int finalInventory = updatedProduct.getInventory().getStock();
+        //then
+        //재고 확인
+        assertEquals(initialInventory - numberOfThreads, finalInventory);
     }
 }
