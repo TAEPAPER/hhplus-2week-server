@@ -1,79 +1,86 @@
 package kr.hhplus.be.server.concurrency;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.hhplus.be.server.application.point.repository.PointRepository;
-import kr.hhplus.be.server.domain.point.Point;
-import kr.hhplus.be.server.interfaces.point.dto.PointChargeRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
+import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
+import kr.hhplus.be.server.application.coupon.service.CouponService;
+import kr.hhplus.be.server.interfaces.coupon.dto.CouponIssueRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class PointConcurrencyTest {
+@Transactional
+class CouponConcurrencyTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private CouponService couponService;
 
     @Autowired
-    private PointRepository pointRepository;
+    private IssuedCouponRepository issuedCouponRepository;
+
+    @Autowired
+    private CouponRepository couponRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
-    void 동시_포인트_충전_테스트() throws Exception {
-        // given
-        int numberOfThreads = 2;
-        long userId = 1L;
-        long chargeAmount = 1000L;
+    @Autowired
+    private MockMvc mockMvc;
 
-        Point point = pointRepository.findByUserId(userId).orElseThrow();
-        // 초기 잔액
-        long initialBalance = point.getBalance();
+
+    @Test
+    void 동시_쿠폰_발급_테스트() throws InterruptedException {
+        //given
+
+        int numberOfThreads = 2;
+        Long couponId = 2L;
+        Long userId = 1L;
+
+        int initialCouponQuantity = couponRepository.findTotalQuantityById(couponId);
 
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
         CountDownLatch latch = new CountDownLatch(numberOfThreads);
 
         for (int i = 0; i < numberOfThreads; i++) {
-            executorService.submit(() -> {
+            executorService.execute(() -> {
                 try {
-
-                    PointChargeRequest request = new PointChargeRequest(userId, chargeAmount);
+                    CouponIssueRequest request = new CouponIssueRequest(userId, couponId);
                     String json = objectMapper.writeValueAsString(request);
 
-                    mockMvc.perform(post("/point/charge")
+                    mockMvc.perform(post("/coupons/issue")
                                     .contentType("application/json")
                                     .content(json))
                             .andExpect(status().isOk());
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    throw new RuntimeException("스레드 내 요청 실패", e);
                 } finally {
                     latch.countDown();
                 }
             });
         }
 
+
         latch.await();
         executorService.shutdown();
 
-        // then
-        Point result = pointRepository.findByUserId(userId).orElseThrow();
-        long expected = initialBalance + (numberOfThreads * chargeAmount);
-        long actual = result.getBalance();
-
-        assertEquals(expected, actual);
+        //then
+        int issuedCount = couponRepository.findTotalQuantityById(couponId);
+        assertThat(issuedCount).isEqualTo(initialCouponQuantity - numberOfThreads);
     }
 }
