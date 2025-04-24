@@ -37,12 +37,10 @@ class PointServiceTest {
         long chargeAmount = 2000L;
 
         Point existingPoint = Point.builder()
-                            .id(userId)
                             .user(user)
                             .balance(initialAmount)
                             .build();
         Point updatedPoint = Point.builder()
-                            .id(userId)
                             .user(user)
                             .balance(initialAmount + chargeAmount)
                             .build();
@@ -85,7 +83,6 @@ class PointServiceTest {
         // given
         User user = User.builder().id(1L).name("test").build();
         Point point = Point.builder()
-                            .id(1L)
                             .user(user)
                             .balance(1000L)
                             .build();
