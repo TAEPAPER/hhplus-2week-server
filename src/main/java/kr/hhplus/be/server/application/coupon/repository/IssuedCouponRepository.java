@@ -9,4 +9,7 @@ public interface IssuedCouponRepository {
     IssuedCoupon save(IssuedCoupon issuedCoupon);
 
     int countByCouponId(Long couponId);
+
+    boolean existsByUserIdAndCouponId(Long userId, Long couponId);
+
 }

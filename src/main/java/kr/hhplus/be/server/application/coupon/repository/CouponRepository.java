@@ -1,15 +1,20 @@
 package kr.hhplus.be.server.application.coupon.repository;
 
+import jakarta.persistence.LockModeType;
 import kr.hhplus.be.server.domain.coupon.Coupon;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Lock;
 
 import java.util.Optional;
 
 public interface CouponRepository {
 
-    boolean existsById(long userId, long couponId);
 
     Optional<Coupon> findById(long couponId);
 
-    int countByCouponId(long couponId);
+    int findTotalQuantityById(long couponId);
+
+    Coupon save(Coupon coupon);
+
+    Optional<Coupon> findByIdWithLock( long couponId);
+
 }

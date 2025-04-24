@@ -15,17 +15,21 @@ public class CouponRepositoryImpl implements CouponRepository {
     private final CouponJpaRepository couponJpaRepository;
 
     @Override
-    public boolean existsById(long userId, long couponId) {
-        return couponJpaRepository.existsById(couponId);
-    }
-
-    @Override
     public Optional<Coupon> findById(long couponId) {
         return couponJpaRepository.findById(couponId);
     }
 
     @Override
-    public int countByCouponId(long couponId) {
-        return couponJpaRepository.countById(couponId);
+    public int findTotalQuantityById(long couponId) {
+        return couponJpaRepository.findTotalQuantityById(couponId);
+    }
+
+    @Override
+    public Coupon save(Coupon coupon) {
+        return couponJpaRepository.save(coupon);
+    }
+    @Override
+    public Optional<Coupon> findByIdWithLock(long couponId) {
+        return couponJpaRepository.findByIdWithLock(couponId);
     }
 }

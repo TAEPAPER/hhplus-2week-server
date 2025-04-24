@@ -25,9 +25,6 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
 
-    // 쿠폰 ID별 Lock 보관소
-    private final Map<Long, ReentrantLock> lockMap = new ConcurrentHashMap<>();
-
     public IssuedCoupon getById(long couponId) {
         if (couponId <= 0) {
             return new NoCoupon(); // 기본 객체 반환
@@ -37,25 +34,23 @@ public class CouponService {
 
     @Transactional
     public void issueCoupon(long userId, long couponId) {
-        //유저 정보 조회
+        // 1. 유저 정보 조회
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
-        // 쿠폰별 락 가져오기
-        ReentrantLock lock = lockMap.computeIfAbsent(couponId, id -> new ReentrantLock());
-        lock.lock();
-        try {
             // 2. 이미 발급받았는지 확인
-            if (couponRepository.existsById(userId, couponId)) {
+            if (issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId)) {
                 throw new IllegalStateException("이미 발급받은 쿠폰입니다.");
             }
 
             // 3. 발급 수량 초과 확인
-            Coupon coupon = couponRepository.findById(couponId)
+            Coupon coupon = //couponRepository.findById(couponId)
+                    couponRepository.findByIdWithLock(couponId)
                     .orElseThrow(() -> new IllegalArgumentException("쿠폰이 존재하지 않습니다."));
 
-            int issuedCount = couponRepository.countByCouponId(couponId);
-
+            //현재 남은 수량
+            int issuedCount = couponRepository.findTotalQuantityById(couponId);
+            //발급 여부 확인 , 재고 차감
            coupon.isIssueAvailable(issuedCount);
 
             // 4. 발급
@@ -65,10 +60,7 @@ public class CouponService {
                                     .build();
 
             issuedCouponRepository.save(issuedCoupon);
-
-        } finally {
-            lock.unlock(); // 💡 꼭 풀어줘야 해!
-        }
+            couponRepository.save(coupon);
 
 
     }

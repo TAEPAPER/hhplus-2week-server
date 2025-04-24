@@ -60,9 +60,10 @@ public class Coupon {
     }
 
     public void isIssueAvailable(int issuedCount) {
-        if(totalQuantity <= issuedCount) {
-            throw new IllegalArgumentException("쿠폰 발급 수량이 초과되었습니다.");
+        if(issuedCount == 0){
+            throw new IllegalStateException("쿠폰이 소진되었습니다.");
         }
+        this.totalQuantity = this.totalQuantity - 1;
     }
 }
 
