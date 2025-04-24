@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.integration;
 
+import kr.hhplus.be.server.application.product.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,6 +17,9 @@ class ProductIntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     @Test
     void 상품_조회_성공() throws Exception {
         // given
@@ -25,6 +29,7 @@ class ProductIntegrationTest {
         mockMvc.perform(get("/products/{id}", productId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(productId));
+
     }
 
     @Test

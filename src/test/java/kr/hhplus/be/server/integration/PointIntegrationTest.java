@@ -35,6 +35,9 @@ class PointIntegrationTest {
                         .content(jsonRequest))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.balance").value(point.getBalance() + 1000));
+        // then
+        Point updatedPoint = pointRepository.findByUserId(1).get();
+        assertThat(updatedPoint.getBalance()).isEqualTo(point.getBalance() + 1000);
     }
 
     @Test
@@ -47,6 +50,10 @@ class PointIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isBadRequest());
+        // then
+        // 예외 처리 로직이 없으므로, DB에 포인트가 생성되지 않아야 함
+        Point point = pointRepository.findByUserId(0).orElse(null);
+        assertThat(point).isNull();
 
     }
 
@@ -60,6 +67,11 @@ class PointIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isBadRequest());
+        // then
+        // 예외 처리 로직이 없으므로, DB에 포인트가 생성되지 않아야 함
+        Point point = pointRepository.findByUserId(1).orElse(null);
+        assertThat(point).isNotNull();
+
     }
 
     @Test
@@ -72,6 +84,10 @@ class PointIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isBadRequest());
+        // then
+        // 예외 처리 로직이 없으므로, DB에 포인트가 생성되지 않아야 함
+        Point point = pointRepository.findByUserId(1).orElse(null);
+        assertThat(point).isNotNull();
     }
 
 }
