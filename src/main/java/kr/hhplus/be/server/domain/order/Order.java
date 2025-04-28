@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.order;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.product.Product;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
 @Table(name = "orders")
+@Getter
 public class Order {
     // 기본 생성자 추가
     protected Order() {
@@ -28,7 +29,6 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @Getter
     private User user;
 
     @Enumerated(EnumType.STRING)
@@ -41,42 +41,27 @@ public class Order {
     @Column(nullable = false)
     private long totalPrice;
 
-    @OneToOne
-    @JoinColumn(name = "issued_coupon_id")
-    private IssuedCoupon coupon;
+    @Column(name="issued_coupon_id")
+    @Nullable
+    private Long issuedCouponId;
 
     @CreatedDate
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Builder
-    public Order( User user, List<OrderItem> items, OrderStatus orderStatus, long totalPrice) {
+    public Order( User user, List<OrderItem> items, OrderStatus orderStatus, long totalPrice, @Nullable Long issuedCouponId) {
         this.user = user;
         this.orderStatus = orderStatus;
         this.items = items;
         this.totalPrice = totalPrice;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public long getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-
-    public List<OrderItem> getOrderItems() {
-        return items;
+        this.issuedCouponId = issuedCouponId;
     }
 
     public static Order create(User user, List<ProductQuantity> productQuantities, IssuedCoupon coupon) {
 
         List<OrderItem> orderItems = new ArrayList<>();
+
         long totalPrice = 0;
 
         for (ProductQuantity pq : productQuantities) {
@@ -84,27 +69,33 @@ public class Order {
             int quantity = pq.quantity();
 
             // 재고 확인
-            product.isStockAvailable(quantity);
+            product.checkStockAvailability(quantity);
 
             long unitPrice = product.getPrice() * quantity;
             totalPrice += unitPrice;
 
-            //재고 차감
-            product.deduct(quantity);
-
-            orderItems.add(new OrderItem(product, quantity, unitPrice));
+            orderItems.add(new OrderItem(null,product, quantity, unitPrice));
         }
 
         // 쿠폰 적용
         if (coupon.isValid()) {
-            totalPrice -= coupon.calculateDiscount(totalPrice);
+            totalPrice  = coupon.calculateDiscount(totalPrice);
+            coupon.markAsUsed();
             totalPrice = Math.max(totalPrice, 0);
         }
 
-        return new Order(user, orderItems, OrderStatus.CREATED ,totalPrice);
+       Order order = new Order(user, orderItems, OrderStatus.CREATED ,totalPrice, coupon.getId());
+        for(OrderItem item : orderItems) {
+            item.setOrder(order);
+        }
+        return order;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public record ProductQuantity(Product product, int quantity) {}
 
-}
 
+}

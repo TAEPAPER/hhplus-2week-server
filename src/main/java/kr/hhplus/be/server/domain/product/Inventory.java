@@ -16,11 +16,6 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 상품 연관관계
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
     @Column(nullable = false)
     private int stock;
 
@@ -28,8 +23,7 @@ public class Inventory {
     @CreationTimestamp
     private LocalDateTime updatedAt;
 
-    public Inventory(Product product, int stock) {
-        this.product = product;
+    public Inventory(int stock) {
         this.stock = stock;
         this.updatedAt = LocalDateTime.now();
     }
@@ -39,10 +33,7 @@ public class Inventory {
     }
 
     public void deduct(int quantity) {
-        if (!hasEnough(quantity)) {
-            throw new IllegalStateException("재고 부족으로 차감 불가");
-        }
-        this.stock -= quantity;
+        this.stock = stock - quantity;
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -50,6 +41,4 @@ public class Inventory {
         this.stock += quantity;
         this.updatedAt = LocalDateTime.now();
     }
-
-
 }

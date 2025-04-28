@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.point;
 
 import kr.hhplus.be.server.domain.pointHistory.PointHistory;
-import kr.hhplus.be.server.interfaces.api.point.dto.PointResponse;
+import kr.hhplus.be.server.interfaces.point.dto.PointResponse;
 import lombok.Getter;
 
 @Getter

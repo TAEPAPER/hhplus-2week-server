@@ -1,11 +1,15 @@
 package kr.hhplus.be.server.integration;
 
+import kr.hhplus.be.server.application.point.repository.PointRepository;
+import kr.hhplus.be.server.domain.point.Point;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -15,16 +19,22 @@ class PointIntegrationTest {
 
     @Autowired MockMvc mockMvc;
 
+    @Autowired
+    PointRepository pointRepository;
+
     @Test
     void 포인트_충전_성공() throws Exception {
 
+        //given
+        Point point = pointRepository.findByUserId(1).get();
         String jsonRequest = "{ \"userId\": 1, \"amount\": 1000 }";
+
         // when
         mockMvc.perform(post("/point/charge")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonRequest))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.balance").value(2000));
+                .andExpect(jsonPath("$.balance").value(point.getBalance() + 1000));
     }
 
     @Test

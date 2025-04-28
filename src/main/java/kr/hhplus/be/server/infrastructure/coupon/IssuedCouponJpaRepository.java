@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface IssuedCouponJpaRepository extends JpaRepository<IssuedCoupon, Long> {
 
     int countByCouponId(Long couponId);
+
+    boolean existsByUserIdAndCouponId(Long userId, Long couponId);
 }

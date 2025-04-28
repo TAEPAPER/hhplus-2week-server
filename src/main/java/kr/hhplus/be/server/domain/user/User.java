@@ -11,6 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @EntityListeners(org.springframework.data.jpa.domain.support.AuditingEntityListener.class)
 public class User {
 

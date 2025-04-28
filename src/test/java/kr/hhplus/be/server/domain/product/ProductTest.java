@@ -28,14 +28,14 @@ class ProductTest {
     }
 
     @Test
-    @DisplayName("재고가 충분하지 않을 때 isStockAvailable 메서드가 예외를 던진다")
-    void isStockAvailable_재고부족_예외() {
+    @DisplayName("재고가 충분하지 않을 때 checkStockAvailability 메서드가 예외를 던진다")
+    void checkStockAvailability_재고부족_예외() {
         // given
         int requestedQuantity = 10;
         when(inventory.hasEnough(requestedQuantity)).thenReturn(false);
 
         // when & then
-        assertThatThrownBy(() -> product.isStockAvailable(requestedQuantity))
+        assertThatThrownBy(() -> product.checkStockAvailability(requestedQuantity))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("상품 재고 부족");
 
@@ -43,14 +43,14 @@ class ProductTest {
     }
 
     @Test
-    @DisplayName("재고가 충분하지 않을 때 deduct 메서드가 예외를 던진다")
-    void deduct_재고부족_예외() {
+    @DisplayName("재고가 충분하지 않을 때 deductStock 메서드가 예외를 던진다")
+    void deductStock_재고부족_예외() {
         // given
         int requestedQuantity = 5;
         when(inventory.hasEnough(requestedQuantity)).thenReturn(false);
 
         // when & then
-        assertThatThrownBy(() -> product.deduct(requestedQuantity))
+        assertThatThrownBy(() -> product.deductStock(requestedQuantity))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("재고 부족으로 차감 불가");
 
@@ -58,14 +58,14 @@ class ProductTest {
     }
 
     @Test
-    @DisplayName("재고가 충분할 때 deduct 메서드가 정상적으로 호출된다")
-    void deduct_정상작동() {
+    @DisplayName("재고가 충분할 때 deductStock 메서드가 정상적으로 호출된다")
+    void deductStock_정상작동() {
         // given
         int requestedQuantity = 3;
         when(inventory.hasEnough(requestedQuantity)).thenReturn(true);
 
         // when
-        product.deduct(requestedQuantity);
+        product.deductStock(requestedQuantity);
 
         // then
         verify(inventory, times(1)).hasEnough(requestedQuantity);

@@ -37,11 +37,9 @@ public class Point {
         }
         long totalAmount = this.balance + amount;
 
-        return Point.builder()
-                .id(this.id)
-                .user(this.user)
-                .balance(totalAmount)
-                .build();
+        this.balance = totalAmount;
+
+        return this;
     }
 
     //포인트를 사용한다.
@@ -60,5 +58,9 @@ public class Point {
                 .user(this.user)
                 .balance(totalAmount)
                 .build();
+    }
+
+    public void setBalance(int i) {
+        this.balance = i;
     }
 }

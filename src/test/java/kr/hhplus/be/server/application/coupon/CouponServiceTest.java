@@ -54,9 +54,9 @@ class CouponServiceTest {
                                 .build();
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(couponRepository.existsById(userId, couponId)).thenReturn(false);
+        when(issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(false);
         when(couponRepository.findById(couponId)).thenReturn(Optional.of(coupon));
-        when(couponRepository.countByCouponId(couponId)).thenReturn(0);
+        when(couponRepository.findTotalQuantityById(couponId)).thenReturn(0);
         when(issuedCouponRepository.save(any(IssuedCoupon.class))).thenReturn(issuedCoupon);
 
         // When
@@ -73,7 +73,7 @@ class CouponServiceTest {
         long couponId = 1L;
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(new User("test")));
-        when(couponRepository.existsById(userId, couponId)).thenReturn(true);
+        when(issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(true);
 
         // When & Then
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> couponService.issueCoupon(userId, couponId));
@@ -102,9 +102,9 @@ class CouponServiceTest {
         Coupon coupon = mock(Coupon.class);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(new User("test")));
-        when(couponRepository.existsById(userId, couponId)).thenReturn(false);
+        when(issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(false);
         when(couponRepository.findById(couponId)).thenReturn(Optional.of(coupon));
-        when(couponRepository.countByCouponId(couponId)).thenReturn(5);
+        when(couponRepository.findTotalQuantityById(couponId)).thenReturn(5);
         doThrow(new IllegalArgumentException("쿠폰 발급 수량이 초과되었습니다.")).when(coupon).isIssueAvailable(5);
 
         // When & Then

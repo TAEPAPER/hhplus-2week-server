@@ -2,43 +2,51 @@ package kr.hhplus.be.server.domain.product;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  long id;
+    private long id;
 
     @Column(length = 50, nullable = false)
-    private  String name;
+    private String name;
 
     @Column(length = 50, nullable = false)
-    private  long price;
+    private long price;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private  Inventory inventory;
+    @OneToOne
+    @JoinColumn(name = "inventory_id")
+    private Inventory inventory;
 
     @Column(length = 200, nullable = false)
     private String description;
 
-    public long getId() { return id; }
-    public long getPrice() { return price; }
-    public String getName() { return name;}
-    public String getDescription() { return description;}
+    // 생성자 추가
+    public Product(String name, long price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
 
-    public void isStockAvailable(int quantity) {
-        if (!inventory.hasEnough(quantity)) {
+    // 재고 관련 메서드는 유지하되 명확한 이름으로 변경
+    public void checkStockAvailability(int quantity) {
+        if (inventory == null || !inventory.hasEnough(quantity)) {
             throw new IllegalStateException("상품 재고 부족");
         }
     }
 
-    public void deduct(int quantity) {
-        if (!inventory.hasEnough(quantity)) {
+    public void deductStock(int quantity) {
+        if (inventory == null || !inventory.hasEnough(quantity)) {
             throw new IllegalStateException("재고 부족으로 차감 불가");
         }
         this.inventory.deduct(quantity);
     }
+
+
 }

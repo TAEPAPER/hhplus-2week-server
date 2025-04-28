@@ -28,5 +28,8 @@ public class IssuedCouponRepositoryImpl implements IssuedCouponRepository {
         return issuedCouponRepository.countByCouponId(couponId);
     }
 
-
+    @Override
+    public boolean existsByUserIdAndCouponId(Long userId, Long couponId) {
+        return issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId);
+    }
 }

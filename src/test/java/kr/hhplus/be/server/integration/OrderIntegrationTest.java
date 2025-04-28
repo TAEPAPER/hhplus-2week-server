@@ -22,7 +22,7 @@ public class OrderIntegrationTest {
     //주문 생성
     @Test
     void 주문_생성_성공() throws Exception {
-        String jsonRequest = "{ \"userId\": 1, \"orderItems\": [{ \"productId\": 1, \"quantity\": 2 }], \"couponId\": 1 }";
+        String jsonRequest = "{ \"userId\": 1, \"orderItems\": [{ \"productId\": 1, \"quantity\": 3 }], \"couponId\": 0 }";
 
         mockMvc.perform(post("/orders/order")
                         .contentType(MediaType.APPLICATION_JSON)
