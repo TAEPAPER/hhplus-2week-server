@@ -1,5 +1,8 @@
 package kr.hhplus.be.server.integration;
 
+import kr.hhplus.be.server.application.order.repository.OrderRepository;
+import org.aspectj.weaver.ast.Or;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,6 +22,9 @@ public class OrderIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     //주문 생성
     @Test
     void 주문_생성_성공() throws Exception {
@@ -29,6 +35,7 @@ public class OrderIntegrationTest {
                         .content(jsonRequest))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(1));
+
     }
     //주문 생성 실패 - 사용자 없음
     @Test
