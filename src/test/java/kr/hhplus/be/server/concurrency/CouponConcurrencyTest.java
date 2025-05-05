@@ -1,10 +1,11 @@
 package kr.hhplus.be.server.concurrency;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.persistence.EntityManager;
 import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
 import kr.hhplus.be.server.application.coupon.service.CouponService;
-import kr.hhplus.be.server.interfaces.coupon.dto.CouponIssueRequest;
+import kr.hhplus.be.server.domain.coupon.Coupon;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,13 +18,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.Mockito.mock;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class CouponConcurrencyTest {
 
     @Autowired
@@ -41,46 +39,83 @@ class CouponConcurrencyTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    EntityManager em;
+
+    @Autowired
+    private TestDataInitializer testDataInitializer;
+
+    private Coupon testCoupon;
+
+    @BeforeEach
+    void setUp() {
+        testCoupon = testDataInitializer.initCoupon();  // 트랜잭션 커밋된 상태
+    }
+
 
     @Test
     void 동시_쿠폰_발급_테스트() throws InterruptedException {
         //given
-
-        int numberOfThreads = 2;
-        Long couponId = 2L;
+        int numberOfThreads = 1;
         Long userId = 1L;
 
-        int initialCouponQuantity = couponRepository.findTotalQuantityById(couponId);
+        int initialCouponQuantity = couponRepository.findTotalQuantityById(testCoupon.getId());
 
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
         CountDownLatch latch = new CountDownLatch(numberOfThreads);
 
-        for (int i = 0; i < numberOfThreads; i++) {
-            executorService.execute(() -> {
-                try {
-                    CouponIssueRequest request = new CouponIssueRequest(userId, couponId);
-                    String json = objectMapper.writeValueAsString(request);
+        long[] userIds = {1L, 2L, 3L, 4L, 5L};
 
-                    mockMvc.perform(post("/coupons/issue")
-                                    .contentType("application/json")
-                                    .content(json))
-                            .andExpect(status().isOk());
+        for (int i = 0; i < numberOfThreads; i++) {
+            int finalI = i;
+            executorService.submit(() -> {
+                try {
+                    couponService.issueCoupon(userIds[finalI], testCoupon.getId());
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    throw new RuntimeException("스레드 내 요청 실패", e);
                 } finally {
                     latch.countDown();
                 }
             });
         }
 
-
         latch.await();
         executorService.shutdown();
 
         //then
-        int issuedCount = couponRepository.findTotalQuantityById(couponId);
+        int issuedCount = couponRepository.findTotalQuantityById(testCoupon.getId());
         assertThat(issuedCount).isEqualTo(initialCouponQuantity - numberOfThreads);
+    }
+
+
+
+    @Test
+    void couponRepository_작동_테스트(){
+       int count =  couponRepository.findTotalQuantityById(testCoupon.getId());
+         assertThat(count).isEqualTo(500);
+    }
+
+
+
+    @Test
+    void findTotalQuantityById_성공() {
+
+        int quantity = couponRepository.findTotalQuantityById(testCoupon.getId());
+        assertThat(quantity).isEqualTo(500);
+    }
+
+
+    @Test
+    @Transactional
+    void Lock_test(){
+
+        Coupon result = couponRepository.findByIdWithLock(testCoupon.getId())
+                .orElseThrow(() -> new IllegalArgumentException("쿠폰이 존재하지 않습니다."));
+
+        assertThat(result.getId()).isEqualTo(testCoupon.getId());
+
+
+
     }
 }

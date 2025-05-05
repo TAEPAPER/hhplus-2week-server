@@ -48,6 +48,12 @@ dependencies {
 	//springdoc-openapi Swagger UI 추가
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
+	implementation("org.springframework.retry:spring-retry")
+	implementation("org.springframework.boot:spring-boot-starter-aop")
+
+	//redis
+	implementation("org.redisson:redisson:3.23.5")
+
 	// lombok
 	compileOnly("org.projectlombok:lombok:1.18.30")
 	annotationProcessor("org.projectlombok:lombok:1.18.30")
@@ -55,8 +61,10 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok:1.18.30")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 
-	testImplementation("org.instancio:instancio-core:2.0.0")
-	testImplementation("org.instancio:instancio-junit:2.0.0")  // JUnit 5 연동 시
+	implementation ("org.hibernate:hibernate-core:6.3.1.Final")
+	testImplementation ("org.instancio:instancio-core:2.6.0")
+	testImplementation("org.objenesis:objenesis:3.3")
+
 
 
 }

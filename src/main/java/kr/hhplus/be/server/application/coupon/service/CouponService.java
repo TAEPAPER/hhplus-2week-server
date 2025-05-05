@@ -4,6 +4,7 @@ package kr.hhplus.be.server.application.coupon.service;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.application.user.repository.UserRepository;
+import kr.hhplus.be.server.application.user.service.UserService;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
@@ -24,6 +25,7 @@ public class CouponService {
     private final IssuedCouponRepository issuedCouponRepository;
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     public IssuedCoupon getById(long couponId) {
         if (couponId <= 0) {
@@ -34,34 +36,30 @@ public class CouponService {
 
     @Transactional
     public void issueCoupon(long userId, long couponId) {
-        // 1. 유저 정보 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
-            // 2. 이미 발급받았는지 확인
-            if (issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId)) {
+            // 1. 이미 발급받았는지 확인
+           /* if (issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId)) {
                 throw new IllegalStateException("이미 발급받은 쿠폰입니다.");
-            }
+            }*/
 
-            // 3. 발급 수량 초과 확인
+            // 2. 발급 수량 초과 확인
             Coupon coupon = //couponRepository.findById(couponId)
                     couponRepository.findByIdWithLock(couponId)
                     .orElseThrow(() -> new IllegalArgumentException("쿠폰이 존재하지 않습니다."));
 
-            //현재 남은 수량
-            int issuedCount = couponRepository.findTotalQuantityById(couponId);
-            //발급 여부 확인 , 재고 차감
-           coupon.isIssueAvailable(issuedCount);
+            // 3. 발급 여부 확인 , 재고 차감
+               coupon.isIssueAvailable(coupon.getTotalQuantity());
 
-            // 4. 발급
-            IssuedCoupon issuedCoupon = IssuedCoupon.builder().user(user)
+           // 4. 발급
+            IssuedCoupon issuedCoupon = IssuedCoupon.builder()
+                                    .userId(userId)
                                     .coupon(coupon)
                                     .issuedAt(LocalDateTime.now())
                                     .build();
-
+            // 5. 발급된 쿠폰 저장
             issuedCouponRepository.save(issuedCoupon);
+
+            // 6. 쿠폰 재고 차감 저장
             couponRepository.save(coupon);
-
-
     }
 }
