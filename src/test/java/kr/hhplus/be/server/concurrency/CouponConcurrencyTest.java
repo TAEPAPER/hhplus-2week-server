@@ -83,11 +83,11 @@ class CouponConcurrencyTest {
         latch.await();
         executorService.shutdown();
 
+        em.clear();
         //then
         int issuedCount = couponRepository.findTotalQuantityById(testCoupon.getId());
         assertThat(issuedCount).isEqualTo(initialCouponQuantity - numberOfThreads);
     }
-
 
 
     @Test

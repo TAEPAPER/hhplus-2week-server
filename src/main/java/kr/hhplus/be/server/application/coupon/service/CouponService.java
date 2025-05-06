@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.coupon.service;
 
-
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.application.user.repository.UserRepository;
@@ -8,15 +7,11 @@ import kr.hhplus.be.server.application.user.service.UserService;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
-import kr.hhplus.be.server.domain.user.User;
+import kr.hhplus.be.server.interfaces.api.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
-
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +19,6 @@ public class CouponService {
 
     private final IssuedCouponRepository issuedCouponRepository;
     private final CouponRepository couponRepository;
-    private final UserRepository userRepository;
-    private final UserService userService;
 
     public IssuedCoupon getById(long couponId) {
         if (couponId <= 0) {
@@ -35,12 +28,13 @@ public class CouponService {
     }
 
     @Transactional
+    @DistributedLock(key = "T(java.lang.String).format('Coupon%d', #couponId)")
     public void issueCoupon(long userId, long couponId) {
 
             // 1. 이미 발급받았는지 확인
-           /* if (issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId)) {
+            if (issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId)) {
                 throw new IllegalStateException("이미 발급받은 쿠폰입니다.");
-            }*/
+            }
 
             // 2. 발급 수량 초과 확인
             Coupon coupon = //couponRepository.findById(couponId)
