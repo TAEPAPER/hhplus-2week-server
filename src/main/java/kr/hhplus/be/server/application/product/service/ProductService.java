@@ -9,14 +9,18 @@ import kr.hhplus.be.server.domain.product.Inventory;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.TopSellingProduct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.Optional;
+import org.springframework.cache.annotation.Cacheable;
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -72,8 +76,16 @@ public class ProductService {
         }
     }
 
+    @Cacheable(value = "popularProducts", key = "'popular'")
     public List<TopSellingProduct> getPopularProducts() {
         return topSellingProductRepository.findAll();
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    @CacheEvict(value = "popularProducts", key = "'popular'")
+    public void refreshPopularProductsCache() {
+        // 하루에 한 번 캐시 초기화
+        System.out.println("[캐시 초기화] 인기 상품 캐시가 초기화되었습니다.");
     }
 
     public Product save(Product product) {

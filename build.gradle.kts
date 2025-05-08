@@ -52,6 +52,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 
 	//redis
+	// Redis (Spring Data Redis)
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	testImplementation("org.testcontainers:redis:1.19.3")
 	implementation("org.redisson:redisson-spring-boot-starter:3.27.0")
 	implementation("org.redisson:redisson:3.23.5")

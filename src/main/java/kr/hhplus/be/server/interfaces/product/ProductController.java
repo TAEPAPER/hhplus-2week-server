@@ -44,6 +44,5 @@ public class ProductController implements ProductApi {
                         .toList()
 
         );
-
     }
 }

@@ -3,6 +3,7 @@ spring:
     name: hhplus
   profiles:
     active: local
+
   datasource:
     name: HangHaePlusDataSource
     type: com.zaxxer.hikari.HikariDataSource
@@ -11,6 +12,7 @@ spring:
       connection-timeout: 10000
       max-lifetime: 60000
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     open-in-view: false
     generate-ddl: false
@@ -23,22 +25,21 @@ spring:
       hibernate:
         format_sql: true
 
-
----
-spring.config.activate.on-profile: local, test
-
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
-    username: application
-    password: application
-
+  redis:
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 4
+        min-idle: 1
+        max-wait: 5000
   data:
     redis:
       host: ${spring.redis.host:localhost}
+      timeout: 3000
       port: ${spring.redis.port:6379}
 
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.springframework.data.redis: debug
