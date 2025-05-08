@@ -23,7 +23,7 @@ class IssuedCouponTest {
 
         MockitoAnnotations.openMocks(this);
 
-        IssuedCoupon issuedCoupon = new IssuedCoupon(user,coupon, LocalDateTime.now());
+        IssuedCoupon issuedCoupon = new IssuedCoupon(1L, coupon, LocalDateTime.now());
         long expected = 8000L;
 
         //when

@@ -12,4 +12,5 @@ public interface IssuedCouponRepository {
 
     boolean existsByUserIdAndCouponId(Long userId, Long couponId);
 
+    boolean existsByUserIdAndCouponIdWithLock(long userId, long couponId);
 }

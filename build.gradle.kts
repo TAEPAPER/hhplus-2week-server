@@ -48,6 +48,20 @@ dependencies {
 	//springdoc-openapi Swagger UI 추가
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
+	implementation("org.springframework.retry:spring-retry")
+	implementation("org.springframework.boot:spring-boot-starter-aop")
+
+	//redis
+	// Redis (Spring Data Redis)
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	testImplementation("org.testcontainers:redis:1.19.3")
+	implementation("org.redisson:redisson-spring-boot-starter:3.27.0")
+	implementation("org.redisson:redisson:3.23.5")
+
+	// JSON 직렬화
+	implementation("com.fasterxml.jackson.core:jackson-databind")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
 	// lombok
 	compileOnly("org.projectlombok:lombok:1.18.30")
 	annotationProcessor("org.projectlombok:lombok:1.18.30")
@@ -55,8 +69,10 @@ dependencies {
 	testCompileOnly("org.projectlombok:lombok:1.18.30")
 	testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 
-	testImplementation("org.instancio:instancio-core:2.0.0")
-	testImplementation("org.instancio:instancio-junit:2.0.0")  // JUnit 5 연동 시
+	implementation ("org.hibernate:hibernate-core:6.3.1.Final")
+	testImplementation ("org.instancio:instancio-core:2.6.0")
+	testImplementation("org.objenesis:objenesis:3.3")
+
 
 
 }

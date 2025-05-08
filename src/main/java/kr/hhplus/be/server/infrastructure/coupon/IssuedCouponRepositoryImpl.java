@@ -32,4 +32,8 @@ public class IssuedCouponRepositoryImpl implements IssuedCouponRepository {
     public boolean existsByUserIdAndCouponId(Long userId, Long couponId) {
         return issuedCouponRepository.existsByUserIdAndCouponId(userId, couponId);
     }
+    @Override
+    public boolean existsByUserIdAndCouponIdWithLock(long userId, long couponId) {
+        return issuedCouponRepository.existsByUserIdAndCouponIdWithLock(userId, couponId);
+    }
 }

@@ -48,7 +48,7 @@ class CouponServiceTest {
         Coupon coupon = Coupon.builder().id(couponId).name("Test Coupon").discountAmount(1000).totalQuantity(30).validValue(20).validUnit("days").build();
 
         IssuedCoupon issuedCoupon = IssuedCoupon.builder()
-                                .user(user)
+                                .userId(userId)
                                 .coupon(coupon)
                                 .issuedAt(LocalDateTime.now())
                                 .build();
