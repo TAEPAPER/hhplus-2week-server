@@ -58,6 +58,10 @@ dependencies {
 	implementation("org.redisson:redisson-spring-boot-starter:3.27.0")
 	implementation("org.redisson:redisson:3.23.5")
 
+	// JSON 직렬화
+	implementation("com.fasterxml.jackson.core:jackson-databind")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
 	// lombok
 	compileOnly("org.projectlombok:lombok:1.18.30")
 	annotationProcessor("org.projectlombok:lombok:1.18.30")
