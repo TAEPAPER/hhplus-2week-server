@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.api.lock;
+package kr.hhplus.be.server.infrastructure.redis.lock;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;

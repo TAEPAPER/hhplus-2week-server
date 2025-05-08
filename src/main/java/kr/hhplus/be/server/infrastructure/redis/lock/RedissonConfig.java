@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.api.lock;
+package kr.hhplus.be.server.infrastructure.redis.lock;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

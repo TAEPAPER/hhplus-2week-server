@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.api.lock;
+package kr.hhplus.be.server.infrastructure.redis.lock;
 
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,7 +23,7 @@ public class DistributedLockAspect {
     private final RedissonClient redissonClient;
     private final AopForTransaction aopForTransaction;
 
-    @Around("@annotation(kr.hhplus.be.server.interfaces.api.lock.DistributedLock)")
+    @Around("@annotation(kr.hhplus.be.server.infrastructure.redis.lock.DistributedLock)")
     public Object applyLock(ProceedingJoinPoint joinPoint) throws Throwable {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
