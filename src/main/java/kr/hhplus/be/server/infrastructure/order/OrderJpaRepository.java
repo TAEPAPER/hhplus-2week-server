@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface OrderJpaRepository extends JpaRepository<Order, Long> {
 
-
-    List<Object[]> findTop5SellingProducts();
 }
