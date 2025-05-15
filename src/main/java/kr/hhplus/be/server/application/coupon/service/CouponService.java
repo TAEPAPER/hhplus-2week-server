@@ -106,8 +106,6 @@ public class CouponService {
 
         // 발급 내역 저장
         redisTemplate.opsForSet().add(issuedKey, String.valueOf(userId));
-
-        return true;
     }
 
 
