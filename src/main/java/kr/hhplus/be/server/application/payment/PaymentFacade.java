@@ -40,6 +40,10 @@ public class PaymentFacade {
         //포인트 사용 이력 저장
         pointHistoryService.recordUse(order.getUser().getId(), order.getTotalPrice());
 
+        //인기 상품 랭킹 업데이트
+        productService.increaseSalesCount(order.getItems());
+
+
         return payment;
     }
 
