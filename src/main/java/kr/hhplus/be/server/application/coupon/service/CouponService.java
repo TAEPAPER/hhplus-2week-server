@@ -8,10 +8,15 @@ import kr.hhplus.be.server.domain.coupon.NoCoupon;
 import kr.hhplus.be.server.infrastructure.redis.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -109,6 +114,46 @@ public class CouponService {
     }
 
 
+    // Redis -> DB 영속화 스케줄러 (매일 자정에 실행)
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
+    public void persistIssuedUserInfo() {
+        // Redis에서 모든 발급 키 조회
+        Set<String> issuedKeys = redisTemplate.keys("coupon:*:issued");
+        if (issuedKeys.isEmpty()) return;
 
+        for (String issuedKey : issuedKeys) {
+            // 쿠폰 ID 추출 (예: coupon:123:issued -> 123)
+            String[] keyParts = issuedKey.split(":");
+            if (keyParts.length < 3) continue;
+            Long couponId = Long.valueOf(keyParts[1]);
+
+            // 발급된 사용자 목록 조회
+            Set<Object> userIdObjects = Collections.singleton(redisTemplate.opsForSet().members(issuedKey));
+
+            // 중복 체크 (이미 DB에 저장된 경우 제외)
+            List<Long> newUserIds = userIdObjects.stream()
+                    .map(Object::toString)
+                    .map(Long::valueOf)
+                    .filter(userId -> !issuedCouponRepository.existsByUserIdAndCouponId(couponId, userId))
+                    .toList();
+
+            if (newUserIds.isEmpty()) continue;
+
+            // 쿠폰 객체 조회 (최적화 가능)
+            Coupon coupon = couponRepository.findById(couponId)
+                    .orElseThrow(() -> new IllegalArgumentException("쿠폰이 존재하지 않습니다: " + couponId));
+
+            // DB에 저장 (Batch Insert)
+            List<IssuedCoupon> newIssuedCoupons = newUserIds.stream()
+                    .map(userId -> new IssuedCoupon(userId, coupon, LocalDateTime.now()))
+                    .collect(Collectors.toList());
+
+            issuedCouponRepository.saveAll(newIssuedCoupons);
+
+            // Redis 데이터 삭제
+            redisTemplate.delete(issuedKey);
+        }
+    }
 
 }
