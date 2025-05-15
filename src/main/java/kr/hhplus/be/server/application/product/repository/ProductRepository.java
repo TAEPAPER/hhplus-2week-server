@@ -15,4 +15,6 @@ public interface ProductRepository {
     Product save(Product product);
 
     Optional<Product> findByIdWithLock(long id);
+
+    Optional<Product> findByName(String productNm);
 }
