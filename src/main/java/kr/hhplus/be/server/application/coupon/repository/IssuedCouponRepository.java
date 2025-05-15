@@ -17,4 +17,6 @@ public interface IssuedCouponRepository {
     boolean existsByUserIdAndCouponIdWithLock(long userId, long couponId);
 
     void saveAll(List<IssuedCoupon> newIssuedCoupons);
+
+    List<IssuedCoupon> findAll();
 }
