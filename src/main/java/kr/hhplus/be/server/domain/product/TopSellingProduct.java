@@ -4,14 +4,11 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
-@Builder
 @Getter
 public class TopSellingProduct implements Serializable {
 
@@ -23,7 +20,7 @@ public class TopSellingProduct implements Serializable {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @Column(name="product_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(name="total_sold", nullable = false)
