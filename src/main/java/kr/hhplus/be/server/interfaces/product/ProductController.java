@@ -37,7 +37,8 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping("/popular")
     public ResponseEntity<List<ProductResponse>> getPopular() {
-        List<TopSellingProduct> topSellingProducts = productService.getPopularProducts();
+        //List<TopSellingProduct> topSellingProducts = productService.getPopularProducts();
+        List<TopSellingProduct> topSellingProducts = productService.getRedisPopularProducts();
         return ResponseEntity.ok(
                 topSellingProducts.stream().filter(top -> top.getProduct() != null)
                         .map(product -> new ProductResponse(product.getProduct()))

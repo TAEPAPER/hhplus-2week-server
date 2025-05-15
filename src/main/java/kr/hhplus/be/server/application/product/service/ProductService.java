@@ -5,17 +5,27 @@ import kr.hhplus.be.server.application.product.repository.InventoryRepository;
 import kr.hhplus.be.server.application.product.repository.ProductRepository;
 import kr.hhplus.be.server.application.product.repository.TopSellingProductRepository;
 import kr.hhplus.be.server.domain.order.Order;
+import kr.hhplus.be.server.domain.order.OrderItem;
 import kr.hhplus.be.server.domain.product.Inventory;
 import kr.hhplus.be.server.domain.product.Product;
 import kr.hhplus.be.server.domain.product.TopSellingProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.springframework.cache.annotation.Cacheable;
 
 @Service
@@ -26,6 +36,9 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final InventoryRepository inventoryRepository;
     private final TopSellingProductRepository topSellingProductRepository;
+    private final StringRedisTemplate redisTemplate;
+
+    private static final String DAILY_POPULAR_KEY = "popular:daily:";
 
     public Product getById(long id) {
         return productRepository.findById(id);
@@ -91,4 +104,83 @@ public class ProductService {
     public Product save(Product product) {
         return productRepository.save(product);
     }
+
+    //redis 스코어 증가
+    public void increaseSalesCount(List<OrderItem> items) {
+        String dailyKey = DAILY_POPULAR_KEY + LocalDate.now();
+
+        for (OrderItem item : items) {
+            long productId = item.getProduct().getId();
+            int quantity = item.getQuantity();
+
+            // 랭킹 기준 : 판매량
+            // 일일 랭킹
+            redisTemplate.opsForZSet().incrementScore(dailyKey, String.valueOf(productId), quantity);
+
+        }
+        // TTL 설정 - 일일: 24시간
+        redisTemplate.expire(dailyKey, java.time.Duration.ofDays(1));
+    }
+
+    // Redis -> DB 영속화 스케줄러
+    @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정에 실행
+    public void persistDailyPopularProducts() {
+        LocalDate targetDate = LocalDate.now().minusDays(1);
+        String dailyKey = DAILY_POPULAR_KEY + targetDate;
+        Set<String> productIds = redisTemplate.opsForZSet().reverseRange(dailyKey, 0, -1);
+
+        if (productIds != null) {
+            for (String productIdStr : productIds) {
+                Long productId = Long.parseLong(productIdStr);
+                Double salesCount = redisTemplate.opsForZSet().score(dailyKey, productIdStr);
+
+                if (salesCount == null) continue;
+                // 기존 데이터 업데이트 또는 새로운 데이터 생성
+                TopSellingProduct topSellingProduct = topSellingProductRepository
+                        .findByProductIdAndAggregatedAt(productId, targetDate)
+                        .map(existingProduct -> existingProduct.increaseTotalSold(salesCount.intValue()))
+                        .orElseGet(() -> TopSellingProduct.builder()
+                                .product(productRepository.findById(productId))
+                                .totalSold(salesCount.intValue())
+                                .aggregatedAt(targetDate)
+                                .build()
+                        );
+                // 저장
+                topSellingProductRepository.save(topSellingProduct);
+
+            }
+        }
+        // Redis 키 삭제 (TTL 만료를 기다리지 않고 바로 삭제)
+        redisTemplate.delete(dailyKey);
+    }
+
+    // Redis에서 Top 10 인기 상품 조회
+    public List<TopSellingProduct> getRedisPopularProducts() {
+        LocalDate today = LocalDate.now();
+        String dailyKey = DAILY_POPULAR_KEY + today;
+        Set<String> productIds = redisTemplate.opsForZSet().reverseRange(dailyKey, 0, 9);
+        List<TopSellingProduct> popularProducts = new ArrayList<>();
+
+        if (productIds != null) {
+            for (String productIdStr : productIds) {
+                Long productId = Long.parseLong(productIdStr);
+                Double salesCount = redisTemplate.opsForZSet().score(dailyKey, productIdStr);
+
+                if (salesCount != null) {
+                    Product product = productRepository.findById(productId);
+                    popularProducts.add(
+                            TopSellingProduct.builder()
+                                    .product(product)
+                                    .totalSold(salesCount.intValue())
+                                    .aggregatedAt(today)  // LocalDate 사용
+                                    .build()
+                    );
+                }
+            }
+        }
+
+        return popularProducts;
+    }
+
+
 }

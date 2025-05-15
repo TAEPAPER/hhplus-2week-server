@@ -13,9 +13,21 @@ public class CouponController {
 
     private final CouponService couponService;
 
+    // 쿠폰 발급
     @PostMapping("/issue")
     public ResponseEntity<Void> issueCoupon(@RequestBody CouponIssueRequest request) {
-        couponService.issueCoupon(request.userId(), request.couponId());
+        try {
+            couponService.issueCouponRedis(request.userId(), request.couponId());
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // 쿠폰 초기화
+    @PostMapping("/{couponId}/initialize")
+    public ResponseEntity<Void> initializeCouponStock(@PathVariable long couponId, @RequestParam int totalQuantity) {
+        couponService.initializeCouponStockRedis(couponId, totalQuantity);
         return ResponseEntity.ok().build();
     }
 
