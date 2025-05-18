@@ -6,6 +6,8 @@ import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class IssuedCouponRepositoryImpl implements IssuedCouponRepository {
@@ -35,5 +37,15 @@ public class IssuedCouponRepositoryImpl implements IssuedCouponRepository {
     @Override
     public boolean existsByUserIdAndCouponIdWithLock(long userId, long couponId) {
         return issuedCouponRepository.existsByUserIdAndCouponIdWithLock(userId, couponId);
+    }
+
+    @Override
+    public void saveAll(List<IssuedCoupon> newIssuedCoupons) {
+        issuedCouponRepository.saveAll(newIssuedCoupons);
+    }
+
+    @Override
+    public List<IssuedCoupon> findAll() {
+        return issuedCouponRepository.findAll();
     }
 }
