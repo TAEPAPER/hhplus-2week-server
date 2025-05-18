@@ -1,11 +1,8 @@
 package kr.hhplus.be.server.infrastructure.product;
 
-import jakarta.persistence.LockModeType;
 import kr.hhplus.be.server.application.product.repository.ProductRepository;
 import kr.hhplus.be.server.domain.product.Product;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,4 +35,8 @@ public class ProductRepositoryImpl implements ProductRepository {
         return Optional.ofNullable(productJpaRepository.findByIdWithLock(id));
     }
 
+    @Override
+    public Optional<Product> findByName(String productNm) {
+        return productJpaRepository.findByName(productNm);
+    }
 }

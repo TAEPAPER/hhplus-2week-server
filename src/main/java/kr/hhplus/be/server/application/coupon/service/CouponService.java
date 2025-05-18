@@ -2,12 +2,10 @@ package kr.hhplus.be.server.application.coupon.service;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.coupon.repository.CouponRepository;
-import kr.hhplus.be.server.application.user.repository.UserRepository;
-import kr.hhplus.be.server.application.user.service.UserService;
 import kr.hhplus.be.server.domain.coupon.Coupon;
 import kr.hhplus.be.server.domain.coupon.IssuedCoupon;
 import kr.hhplus.be.server.domain.coupon.NoCoupon;
-import kr.hhplus.be.server.interfaces.api.lock.DistributedLock;
+import kr.hhplus.be.server.infrastructure.redis.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import kr.hhplus.be.server.application.coupon.repository.IssuedCouponRepository;
@@ -27,7 +25,6 @@ public class CouponService {
         return issuedCouponRepository.findById(couponId);
     }
 
-    @Transactional
     @DistributedLock(key = "T(java.lang.String).format('Coupon%d', #couponId)")
     public void issueCoupon(long userId, long couponId) {
 
