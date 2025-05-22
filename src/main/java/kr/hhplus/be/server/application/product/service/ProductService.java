@@ -125,6 +125,9 @@ public class ProductService {
     // Redis -> DB 영속화 스케줄러
     @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정에 실행
     public void persistDailyPopularProducts() {
+
+        //DAILY_POPULAR_KEY = "popular:daily:";
+
         LocalDate targetDate = LocalDate.now().minusDays(1);
         String dailyKey = DAILY_POPULAR_KEY + targetDate;
         Set<String> productIds = redisTemplate.opsForZSet().reverseRange(dailyKey, 0, -1);
