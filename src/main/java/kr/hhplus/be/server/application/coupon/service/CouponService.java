@@ -68,6 +68,8 @@ public class CouponService {
     // 쿠폰 초기화
     @Transactional
     public void initializeCouponStockRedis(long couponId, int totalQuantity) {
+        //     COUPON_STOCK_KEY = "coupon:%d:stock"; //재고 키
+
         String stockKey = String.format(COUPON_STOCK_KEY, couponId);
 
         // Redis에 초기 재고 설정
@@ -82,10 +84,14 @@ public class CouponService {
     // 쿠폰 발급
     @Transactional
     public void issueCouponRedis(long userId, long couponId) {
+       //  COUPON_STOCK_KEY = "coupon:%d:stock"; //재고 키
+       //  COUPON_ISSUED_KEY = "coupon:%d:issued"; //발급 키
+
         String stockKey = String.format(COUPON_STOCK_KEY, couponId);
         String issuedKey = String.format(COUPON_ISSUED_KEY, couponId);
 
         // 중복 발급 체크
+        // 발급 받은 사람들의 set 정렬
         Boolean isIssued = redisTemplate.opsForSet().isMember(issuedKey, String.valueOf(userId));
         if (Boolean.TRUE.equals(isIssued)) {
             throw new IllegalStateException("이미 발급받은 쿠폰입니다.");
