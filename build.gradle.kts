@@ -73,6 +73,9 @@ dependencies {
 	testImplementation ("org.instancio:instancio-core:2.6.0")
 	testImplementation("org.objenesis:objenesis:3.3")
 
+	// Kafka
+	implementation("org.springframework.kafka:spring-kafka")
+
 
 
 }
