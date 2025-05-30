@@ -10,6 +10,7 @@ import kr.hhplus.be.server.domain.order.Order;
 import kr.hhplus.be.server.domain.payment.Payment;
 import kr.hhplus.be.server.domain.payment.event.PaymentCompletedEvent;
 import kr.hhplus.be.server.domain.point.Point;
+import kr.hhplus.be.server.infrastructure.kafka.PaymentCompletedProducer;
 import kr.hhplus.be.server.interfaces.payment.event.PaymentEventPublisher;
 import lombok.RequiredArgsConstructor;
 import kr.hhplus.be.server.domain.order.OrderItem;
@@ -28,6 +29,7 @@ public class PaymentFacade {
     private final PointHistoryService pointHistoryService;
     private final ProductService productService;
     private final PaymentEventPublisher paymentEventPublisher;
+    private final PaymentCompletedProducer paymentCompletedProducer;
 
     @Transactional
     public Payment processPayment(long orderId) {
@@ -47,8 +49,10 @@ public class PaymentFacade {
         productService.increaseSalesCount(order.getItems());
 
         // 결제 완료 이벤트 발행
-        paymentEventPublisher.publish(new PaymentCompletedEvent(order));
+        //paymentEventPublisher.publish(new PaymentCompletedEvent(order));
 
+        //kafka
+        paymentCompletedProducer.send(new PaymentCompletedEvent(order));
         return payment;
     }
 
